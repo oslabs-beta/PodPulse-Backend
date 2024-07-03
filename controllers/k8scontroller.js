@@ -8,11 +8,11 @@ console.log(k8sApi.basePath);
 const k8scontroller = {};
 
 k8scontroller.getPods = (req, res, next) => {
-  k8sApi
-    .readNamespacedPodLog('ecs-test-6845b4b944-hbcjk', 'default')
-    .then((result) => {
-      console.log('LOG: ', result.body);
-    });
+  // k8sApi
+  //   .readNamespacedPodLog('ecs-test-6845b4b944-hbcjk', 'default')
+  //   .then((result) => {
+  //     console.log('LOG: ', result.body);
+  //   });
   k8sApi
     .listNamespacedPod(
       'default'
@@ -30,8 +30,9 @@ k8scontroller.getPods = (req, res, next) => {
       // undefined
     )
     .then((result) => {
-      console.log('RESULT: ', result);
-      res.locals.result = result.body.items;
+      console.log('Name is: ', result.body.items[0].status.containerStatuses[0].name, 'Restart is: ', result.body.items[0].status.containerStatuses[0].restartCount, "Timestamp start, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp finish, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.finishedAt );
+      res.locals.result = [];
+      for (const el of result.body.items){res.locals.result.push('Name: ', el.status.containerStatuses[0].name, 'Restarts: ', el.status.containerStatuses[0].restartCount, "Timestamp start, ", el.status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp Finish, ", el.status.containerStatuses[0].lastState.terminated.finishedAt)}
       next();
     })
     .catch((err) => {

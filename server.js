@@ -14,7 +14,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
-  console.log('RESULT: ', JSON.stringify(res.locals.result));
+  res.locals.result.forEach((element) => console.log('results: ', JSON.stringify(element)))
+  // console.log('RESULT 1: ', JSON.stringify(res.locals.result));
   return res.status(200).json(res.locals.result);
 });
 
