@@ -17,6 +17,10 @@ app.get('/getPods', k8scontroller.getPods, (req, res) => {
   console.log('RESULT: ', JSON.stringify(res.locals.result));
   return res.status(200).json(res.locals.result);
 });
+app.get('/getPods', k8scontroller.getPodName, (req, res) => {
+  console.log('RESULT: ', JSON.stringify(res.locals.result));
+  return res.status(200).json(res.locals.PodName);
+});
 
 app.use((err, req, res, next) => {
   console.log('ERROR: ', err);
