@@ -32,7 +32,7 @@ k8scontroller.getPods = (req, res, next) => {
     .then((result) => {
       console.log('Name is: ', result.body.items[0].status.containerStatuses[0].name, 'Restart is: ', result.body.items[0].status.containerStatuses[0].restartCount, "Timestamp start, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp finish, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.finishedAt );
       res.locals.result = [];
-      for (const el of result.body.items){res.locals.result.push('Name: ', el.status.containerStatuses[0].name, 'Restarts: ', el.status.containerStatuses[0].restartCount, "Timestamp start, ", el.status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp Finish, ", el.status.containerStatuses[0].lastState.terminated.finishedAt)}
+      for (const el of result.body.items){res.locals.result.push('Name: ', el.status.containerStatuses[0].name, 'Restarts: ', el.status.containerStatuses[0].restartCount, "Timestamp start, ", el.status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp Finish, ", el.status.containerStatuses[0].lastState.terminated.finishedAt, "Reason, ", el.status.containerStatuses[0].lastState.terminated.reason, "Exit code, ", el.status.containerStatuses[0].lastState.terminated.exitCode)}
       next();
     })
     .catch((err) => {
