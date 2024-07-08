@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const PORT = 3000;
@@ -10,17 +10,22 @@ const k8scontroller = require('./controllers/k8scontroller');
 
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
-  console.log('RESULT: ', JSON.stringify(res.locals.result));
+  // console.log('RESULT: ', JSON.stringify(res.locals.result));
   return res.status(200).json(res.locals.result);
 });
-app.get('/getPods', k8scontroller.getPodName, (req, res) => {
-  console.log('RESULT: ', JSON.stringify(res.locals.result));
-  return res.status(200).json(res.locals.PodName);
-});
+// app.get(
+//   '/getPods',
+//   k8scontroller.getPodName,
+//   k8scontroller.getlog,
+//   (req, res) => {
+//     console.log('RESULT: ', JSON.stringify(res.locals.result));
+//     return res.status(200).json(res.locals.PodLog);
+//   }
+// );
 
 app.use((err, req, res, next) => {
   console.log('ERROR: ', err);
