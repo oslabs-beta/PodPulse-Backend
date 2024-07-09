@@ -13,7 +13,12 @@ app.use(express.urlencoded());
 // app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/getPods', k8scontroller.getPods, (req, res) => {
+app.post('/setWatch', k8scontroller.setWatch, (req, res) => {
+  // console.log('RESULT: ', JSON.stringify(res.locals.result));
+  return res.status(200).json(res.locals.result);
+});
+
+app.get('/getPodInfo', k8scontroller.getPodInfo, (req, res) => {
   // console.log('RESULT: ', JSON.stringify(res.locals.result));
   return res.status(200).json(res.locals.result);
 });

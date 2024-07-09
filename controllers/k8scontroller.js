@@ -48,7 +48,8 @@ console.log('basePath', k8sApi.basePath);
 
 const k8scontroller = {};
 
-k8scontroller.getPods = (req, res, next) => {
+k8scontroller.setWatch = (req, res, next) => {
+  console.log(req.body.resourceVersion);
   k8sApi
     .listNamespacedPod(
       'default',
@@ -58,27 +59,67 @@ k8scontroller.getPods = (req, res, next) => {
       undefined,
       undefined,
       undefined,
+      0,
       undefined,
       undefined,
-      100000,
-      true,
-      undefined
+      10,
+      true
     )
     .then((result) => {
-      // console.log('RESULT: ', result);
-      res.locals.result = result.body.items;
+      console.log('GOT HERE');
+      console.log('RESULT: ', result.body);
+
+      const check = (recV, res) => {
+        k8sApi
+          .listNamespacedPod(
+            'default',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            recV,
+            undefined,
+            undefined,
+            10,
+            true
+          )
+          .then((result) => {
+            console.log('RESULT: ', result.body);
+            setTimeout(check, 10200, recV, null);
+          });
+      };
+      setTimeout(check, 10000, req.body.resourceVersion, null);
+
+      res.locals.result = result.body;
       next();
     })
     .catch((err) => {
       next(err);
     });
 };
-k8scontroller.getPodName = (req, res, next) => {
+
+k8scontroller.getPodInfo = (req, res, next) => {
+  k8sApi.listComponentStatus;
   k8sApi
     .listNamespacedPod('default')
     .then((result) => {
       // console.log('RESULT: ', result);
-      res.locals.result = result.body.items[0].metadata.name;
+      const info = {};
+      const pods = result.body.items;
+      // res.locals.result = pods; <-- if you un comment, you can return all
+      // return next();                 of the pods info again.
+      pods.forEach((e) => {
+        const name = e.spec;
+        e = e.metadata;
+        info[name.containers[0].name] = {
+          name: e.name,
+          resourceVersion: e.resourceVersion,
+        };
+      });
+      console.log(info);
+      res.locals.result = info;
       next();
     })
     .catch((err) => {
