@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const demoData = require('./demo-data');
 
 const PORT = 3000;
 const app = express();
@@ -10,8 +10,11 @@ const k8scontroller = require('./controllers/k8scontroller');
 
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(bodyParser.json());
 app.use(cors());
+
+app.get('/test-data', (req, res) => {
+  res.json(demoData);
+});
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
   console.log('RESULT: ', JSON.stringify(res.locals.result));
