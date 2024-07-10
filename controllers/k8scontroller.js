@@ -40,7 +40,9 @@ k8scontroller.getPods = (req, res, next) => {
       
       // console.log('Name is: ', result.body.items[0].status.containerStatuses[0].name, 'Restart is: ', result.body.items[0].status.containerStatuses[0].restartCount, "Timestamp start, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp finish, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.finishedAt );
       res.locals.result = [];
-      for (const el of result.body.items){res.locals.result.push('Name: ', el.status.containerStatuses[0].name, 'Restarts: ', el.status.containerStatuses[0].restartCount, "Timestamp start, ", el.status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp Finish, ", el.status.containerStatuses[0].lastState.terminated.finishedAt, "Reason, ", el.status.containerStatuses[0].lastState.terminated.reason, "Exit code, ", el.status.containerStatuses[0].lastState.terminated.exitCode)}
+    for (let i=0; i<result.body.items.length; i++ /*el of result.body.items*/){
+      const timeNow = result.body.items[i].status.containerStatuses[0].lastState.terminated.startedAt.toString()
+      res.locals.result.push({container_db_id: i, container_name: result.body.items[i].status.containerStatuses[0].name, Restarts: result.body.items[i].status.containerStatuses[0].restartCount, restart_logs: {restart_log_db_id: i, log_time: timeNow}, Timestamp_Finish: result.body.items[i].status.containerStatuses[0].lastState.terminated.finishedAt, Reason: result.body.items[i].status.containerStatuses[0].lastState.terminated.reason, Exit_code: result.body.items[i].status.containerStatuses[0].lastState.terminated.exitCode})}
       next();
     })
     .catch((err) => {
