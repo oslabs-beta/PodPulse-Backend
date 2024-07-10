@@ -11,11 +11,11 @@ console.log(k8sApi.basePath);
 const k8scontroller = {};
 
 k8scontroller.getPods = (req, res, next) => {
-  // k8sApi
-  //   .readNamespacedPodLog('ecs-test-6845b4b944-hbcjk', 'default')
-  //   .then((result) => {
-  //     console.log('LOG: ', result.body);
-  //   });
+  // // k8sApi
+  // //   .readNamespacedPodLog('ecs-test-6845b4b944-hbcjk', 'default')
+  // //   .then((result) => {
+  // //     console.log('LOG: ', result.body);
+  // //   });
   // new CronJob('01 * * * * ', function() {
   //   console.log('runs every 5 seconds');
   // }, null, true);
