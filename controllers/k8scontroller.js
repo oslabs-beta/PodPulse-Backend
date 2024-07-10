@@ -1,5 +1,8 @@
 const k8s = require('@kubernetes/client-node');
 const kc = new k8s.KubeConfig();
+let CronJob = require('cron').CronJob;
+let exec = require('child_process').exec
+
 // kc.makeApiClient();
 kc.loadFromDefault();
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
@@ -13,6 +16,10 @@ k8scontroller.getPods = (req, res, next) => {
   //   .then((result) => {
   //     console.log('LOG: ', result.body);
   //   });
+  // new CronJob('01 * * * * ', function() {
+  //   console.log('runs every 5 seconds');
+  // }, null, true);
+  
   k8sApi
     .listNamespacedPod(
       'default'
@@ -30,7 +37,8 @@ k8scontroller.getPods = (req, res, next) => {
       // undefined
     )
     .then((result) => {
-      console.log('Name is: ', result.body.items[0].status.containerStatuses[0].name, 'Restart is: ', result.body.items[0].status.containerStatuses[0].restartCount, "Timestamp start, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp finish, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.finishedAt );
+      
+      // console.log('Name is: ', result.body.items[0].status.containerStatuses[0].name, 'Restart is: ', result.body.items[0].status.containerStatuses[0].restartCount, "Timestamp start, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp finish, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.finishedAt );
       res.locals.result = [];
       for (const el of result.body.items){res.locals.result.push('Name: ', el.status.containerStatuses[0].name, 'Restarts: ', el.status.containerStatuses[0].restartCount, "Timestamp start, ", el.status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp Finish, ", el.status.containerStatuses[0].lastState.terminated.finishedAt, "Reason, ", el.status.containerStatuses[0].lastState.terminated.reason, "Exit code, ", el.status.containerStatuses[0].lastState.terminated.exitCode)}
       next();

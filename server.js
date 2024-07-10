@@ -14,10 +14,19 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
-  res.locals.result.forEach((element) => console.log('results: ', JSON.stringify(element)))
+  // res.locals.result.forEach((element) => console.log('results: ', JSON.stringify(element)))
   // console.log('RESULT 1: ', JSON.stringify(res.locals.result));
   return res.status(200).json(res.locals.result);
 });
+
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, '../PodPulse-1/public/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  });
+}
+)
 
 app.use((err, req, res, next) => {
   console.log('ERROR: ', err);
@@ -29,3 +38,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+
