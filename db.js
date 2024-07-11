@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const query = async function (sqlQuery, type = 'SELECT') {
   //confirm valid queryType
-  const validTypes = ['SELECT', 'INSERT'];
+  const validTypes = ['SELECT', 'INSERT', 'PROC'];
   if (!validTypes.includes(type)) {
     throw new Error('Invalid queryType given.');
   }
@@ -24,7 +24,8 @@ const query = async function (sqlQuery, type = 'SELECT') {
   try {
     // Get a standalone Oracle Database connection
     connection = await oracledb.getConnection(dbConfig);
-    console.log('Connection was successful!');
+    //connection..console.log('Connection was successful!');
+    console.log('CONNECTION: ', connection.dbDomain);
 
     switch (type) {
       case 'SELECT': {
@@ -39,6 +40,13 @@ const query = async function (sqlQuery, type = 'SELECT') {
           { autoCommit: true }
         );
         output = 'Data added successfully!';
+      }
+      case 'PROC': {
+        const result = await connection.execute(sqlQuery[0], sqlQuery[1], {
+          autoCommit: true,
+        });
+        console.log(result.outBinds);
+        return result.outBinds;
       }
     }
   } catch (err) {
