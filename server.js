@@ -7,6 +7,7 @@ const PORT = 3000;
 const app = express();
 
 const k8scontroller = require('./controllers/k8scontroller');
+const podcontroller = require('./controllers/podcontroller');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -21,6 +22,16 @@ app.get('/getPods', k8scontroller.getPods, (req, res) => {
   // console.log('RESULT 1: ', JSON.stringify(res.locals.result));
   return res.status(200).json(res.locals.result);
 });
+
+app.get(
+  '/pods/:namespace_name',
+  podcontroller.loadPodData,
+  (req, res) => {
+    // res.locals.result.forEach((element) => console.log('results: ', JSON.stringify(element)))
+    // console.log('RESULT 1: ', JSON.stringify(res.locals.result));
+    return res.status(200).json(res.locals.result);
+  }
+);
 
 app.get('/*', function (req, res) {
   res.sendFile(
