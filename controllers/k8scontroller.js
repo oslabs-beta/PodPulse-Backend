@@ -1,7 +1,7 @@
 const k8s = require('@kubernetes/client-node');
 const kc = new k8s.KubeConfig();
-let CronJob = require('cron').CronJob;
-let exec = require('child_process').exec
+// let CronJob = require('cron').CronJob;
+// let exec = require('child_process').exec
 
 // kc.makeApiClient();
 kc.loadFromDefault();
