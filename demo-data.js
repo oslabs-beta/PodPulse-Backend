@@ -1,5 +1,5 @@
 const demoData = {
-  namespace_name: 'my-namespace',  
+  namespace_name: 'my-namespace',
   pods: [
     {
       pod_name: 'my-pod',
@@ -28,8 +28,8 @@ const demoData = {
               restart_log_db_id: 4,
               log_time: 1720577168,
               restart_person: '',
-            }
-          ]
+            },
+          ],
         },
         {
           container_db_id: 6,
@@ -40,8 +40,8 @@ const demoData = {
               restart_log_db_id: 5,
               log_time: 1720577092,
               restart_person: '',
-            }
-          ]
+            },
+          ],
         },
         {
           container_db_id: 7,
@@ -52,12 +52,12 @@ const demoData = {
               restart_log_db_id: 6,
               log_time: 1720577230,
               restart_person: 'Ashe McAtee',
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
-module.exports = demoData;  
+module.exports = demoData;
