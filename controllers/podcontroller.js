@@ -77,4 +77,18 @@ podcontroller.loadPodData = (req, res, next) => {
       console.log(err);
     });
 };
+
+podcontroller.returnData = (req, res, next) => {
+  let query = `
+  SELECT * FROM CONTAINER
+  `;
+
+  db.query(query, (type = 'SELECT'), (stuff = 'con'));
+
+  // query = `
+  // SELECT * FROM CONTAINER
+  // `;
+
+  // db.query(query, (type = 'SELECT'), (stuff = 'name'));
+};
 module.exports = podcontroller;
