@@ -42,11 +42,15 @@ const query = async function (sqlQuery, type = 'SELECT') {
         output = 'Data added successfully!';
       }
       case 'PROC': {
-        const result = await connection.execute(sqlQuery[0], sqlQuery[1], {
-          autoCommit: true,
+        console.log('QUERY: ', sqlQuery[1]);
+
+        return new Promise(async (resolve, reject) => {
+          const result = await connection.execute(sqlQuery[0], sqlQuery[1], {
+            autoCommit: true,
+          });
+          console.log(result.outBinds);
+          resolve = result.outBinds;
         });
-        console.log(result.outBinds);
-        return result.outBinds;
       }
     }
   } catch (err) {
