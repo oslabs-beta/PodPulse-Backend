@@ -48,6 +48,7 @@ k8scontroller.getPods = (req, res, next) => {
           result.body.items[
             i
           ].status.containerStatuses[0].lastState.terminated.startedAt.toString();
+          // console.log(result.body.items[i].status.containerStatuses[0])
         res.locals.result.push({
           container_db_id: i,
           container_name: result.body.items[i].status.containerStatuses[0].name,
