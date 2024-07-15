@@ -10,9 +10,11 @@ kc.loadFromDefault();
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 console.log(k8sApi.basePath);
 
-const podcontroller = {};
+const namespaceController = {};
 
-podcontroller.loadPodData = (req, res, next) => {
+//Namespace initialization
+namespaceController.initializeNamespace = (req, res, next) => {
+  //we'll need to retrieve namespace names from cluster as opposed to from client
   const { namespace_name } = req.params;
   console.log('LOAD POD DATA');
 
@@ -23,8 +25,8 @@ podcontroller.loadPodData = (req, res, next) => {
     END;
     `,
     {
-      name: 'default',
-      user: 'test',
+      name: 'default', //would take from user input field, defaults to 'default'
+      user: 'test', //should come from url parameter
       id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
     },
   ];
@@ -56,7 +58,7 @@ podcontroller.loadPodData = (req, res, next) => {
                 container.state.waiting
                   ? 0
                   : container.state.running
-                  ? container.state.running.startedAt
+                  ? container.state.running.startedAt //should probably use terminatedAt
                   : container.state.terminated.startedAt
               ),
               pod_id_name: pod.metadata.name,
@@ -69,12 +71,16 @@ podcontroller.loadPodData = (req, res, next) => {
 
           db.query(podQuery, (type = 'PROC')).then((result) => {
             console.log('INIT RESULT: ', result);
-          });
+          }); //probably add to res.locals here
         });
       });
+    })
+    .then(() => {
+      return next();
     })
     .catch((err) => {
       console.log(err);
     });
 };
-module.exports = podcontroller;
+
+module.exports = namespaceController;

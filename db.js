@@ -32,6 +32,7 @@ const query = async function (sqlQuery, type = 'SELECT') {
         const result = await connection.execute(sqlQuery);
         console.log(`Output: ${result.rows}`); // <--- this is how you access results after .execute(SELECT QUERY)
         output = result.rows;
+        break;
       }
       case 'INSERT': {
         const result = await connection.execute(
@@ -40,6 +41,7 @@ const query = async function (sqlQuery, type = 'SELECT') {
           { autoCommit: true }
         );
         output = 'Data added successfully!';
+        break;
       }
       case 'PROC': {
         console.log('QUERY: ', sqlQuery[1]);
@@ -51,6 +53,7 @@ const query = async function (sqlQuery, type = 'SELECT') {
           console.log(result.outBinds);
           resolve = result.outBinds;
         });
+        break;
       }
     }
   } catch (err) {
