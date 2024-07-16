@@ -8,7 +8,7 @@ const app = express();
 
 const k8scontroller = require('./controllers/k8scontroller');
 const namespaceController = require('./controllers/namespaceController');
-const dbController = require('./controllers/dbController');
+const dbController = require('./controllers/dbController2');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -35,7 +35,7 @@ app.get(
 );
 
 app.get('/namespace/', dbController.retrieveAll, (req, res) => {
-  return res.sendStatus(200);
+  return res.sendStatus(200).json(res.locals.namespaceData);
 });
 
 app.get('/*', function (req, res) {
