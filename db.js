@@ -5,7 +5,7 @@ require('dotenv').config();
 
 // query(sqlQuery);
 
-const query = async function (sqlQuery, type = 'SELECT') {
+const query = async function (sqlQuery, type='SELECT') {
   //confirm valid queryType
   const validTypes = ['SELECT', 'INSERT', 'PROC'];
   if (!validTypes.includes(type)) {
@@ -31,7 +31,7 @@ const query = async function (sqlQuery, type = 'SELECT') {
       case 'SELECT': {
         const result = await connection.execute(sqlQuery);
         console.log(`Output: ${result.rows}`); // <--- this is how you access results after .execute(SELECT QUERY)
-        output = result.rows;
+        output = [result.rows];
       }
       case 'INSERT': {
         const result = await connection.execute(
@@ -40,6 +40,7 @@ const query = async function (sqlQuery, type = 'SELECT') {
           { autoCommit: true }
         );
         output = 'Data added successfully!';
+        console.log('output', output)
       }
       case 'PROC': {
         console.log('QUERY: ', sqlQuery[1]);
@@ -54,11 +55,12 @@ const query = async function (sqlQuery, type = 'SELECT') {
       }
     }
   } catch (err) {
-    console.error(err);
+    console.error('there is error', err);
   } finally {
     if (connection) {
       try {
-        await connection.close();
+        console.log('connection closing')
+        await connection.close()
       } catch (err) {
         console.error(err);
       }
