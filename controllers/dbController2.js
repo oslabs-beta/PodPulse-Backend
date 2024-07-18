@@ -4,18 +4,16 @@ const oracledb = require('oracledb');
 const dbController = {};
 
 dbController.retrieveAll = (req, res, next) => {
-  const namespace_db_id = 66;
+  const namespace_db_id = 81;
 
   function selectPodsByNamespace(namespace_db_id) {
     const podQuery = `SELECT pod_name, db_id FROM POD where namespace_db_id=${namespace_db_id}`;
-    db.query(podQuery, 'SELECT')
-      .then((results) => new Promise(() => results))
-      .catch((err) => next(err));
+    return db.query(podQuery);
   }
 
   function selectContainersByPod(pod_db_id) {
     const containerQuery = `SELECT container_name, db_id, cleared_at FROM CONTAINER where pod_db_id=${pod_db_id}`;
-    db.query(containerQuery, 'SELECT')
+    db.query(containerQuery)
       .then((results) => results)
       .catch((err) => next(err));
   }
@@ -24,13 +22,14 @@ dbController.retrieveAll = (req, res, next) => {
 
   function selectRestartLogsByContainer(container_db_id) {
     const restartLogQuery = `SELECT db_id, log_time, restart_person FROM RESTART_LOG where container_db_id=${container_db_id}`;
-    db.query(restartLogQuery, 'SELECT')
+    db.query(restartLogQuery)
       .then((results) => results)
       .catch((err) => next(err));
   }
 
   selectPodsByNamespace(namespace_db_id) //should output array of pods
     .then((pods) => {
+      console.log(pods);
       const podsArray = pods.map((pod) => {
         selectContainersByPod(pod[0]) //access pod's db_id
           .then((containers) => {
