@@ -5,7 +5,37 @@ require('dotenv').config();
 
 // query(sqlQuery);
 
-const query = async function (sqlQuery, type = 'SELECT') {
+function query(sqlQuery, binds = {}, isProcedure = false) {
+  const dbConfig = {
+    user: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    connectString: process.env.SVC_NAME,
+  };
+
+  return new Promise((res, rej) => {
+    oracledb
+      .getConnection(dbConfig)
+      .then((con) => {
+        con
+          .execute(sqlQuery, binds, {
+            autoCommit: true,
+            maxRows: 0,
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+          })
+          .then((result) => {
+            console.log('Success, closing connection')
+            // console.log('RESULT IN TEST_QUERY', result);
+            con.close();
+            res(isProcedure ? result.outBinds : result.rows);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+}
+
+const oldQuery = async function (sqlQuery, type = 'SELECT') {
   //confirm valid queryType
   const validTypes = ['SELECT', 'INSERT', 'PROC'];
   if (!validTypes.includes(type)) {
@@ -32,6 +62,7 @@ const query = async function (sqlQuery, type = 'SELECT') {
         const result = await connection.execute(sqlQuery);
         console.log(`Output: ${result.rows}`); // <--- this is how you access results after .execute(SELECT QUERY)
         output = result.rows;
+        break;
       }
       case 'INSERT': {
         const result = await connection.execute(
@@ -40,6 +71,7 @@ const query = async function (sqlQuery, type = 'SELECT') {
           { autoCommit: true }
         );
         output = 'Data added successfully!';
+        break;
       }
       case 'PROC': {
         console.log('QUERY: ', sqlQuery[1]);
@@ -51,14 +83,16 @@ const query = async function (sqlQuery, type = 'SELECT') {
           console.log(result.outBinds);
           resolve = result.outBinds;
         });
+        break;
       }
     }
   } catch (err) {
-    console.error(err);
+    console.error('there is error', err);
   } finally {
     if (connection) {
       try {
-        await connection.close();
+        console.log('connection closing')
+        await connection.close()
       } catch (err) {
         console.error(err);
       }
