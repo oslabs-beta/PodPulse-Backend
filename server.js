@@ -34,7 +34,7 @@ app.get(
   }
 );
 
-app.get('/namespace/', dbController.retrieveAll, (req, res) => {
+app.get('/get/:namespace/', dbController.retrieveAll, (req, res) => {
   return res.sendStatus(200).json(res.locals.namespaceData);
 });
 
