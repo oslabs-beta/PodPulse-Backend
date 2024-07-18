@@ -28,9 +28,9 @@ userController.createUser =  async (req, res, next) => {
     console.log('goin to the database!')
 
     // const sql =  `INSERT INTO USER_TABLE (USERNAME, PASSWORD) VALUES (doh, greg)`
-    const useris = await query(`INSERT INTO USER_TABLE (USERNAME, PASSWORD) VALUES ('${userName}', '${res.locals.pw}')`, 'INSERT')
+    const useris = await query(`INSERT INTO USER_TABLE (USERNAME, PASSWORD) VALUES ('${userName}', '${res.locals.pw}')`)
     console.log('the user is,', useris)
-    res.local.createdUser = "success adding data"
+    res.locals.createdUser = useris
     return next();
     // query(`INSERT INTO user_table (username, password) VALUES (${userName}, ${pw})`,'INSERT')
 }

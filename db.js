@@ -23,6 +23,7 @@ function query(sqlQuery, binds = {}, isProcedure = false) {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
           })
           .then((result) => {
+            console.log('Success, closing connection')
             // console.log('RESULT IN TEST_QUERY', result);
             con.close();
             res(isProcedure ? result.outBinds : result.rows);

@@ -10,6 +10,7 @@ const app = express();
 const k8scontroller = require('./controllers/k8scontroller');
 const namespaceController = require('./controllers/namespaceController');
 const dbController = require('./controllers/dbController2');
+const usercontroller = require('./controllers/usercontroller');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -40,7 +41,7 @@ app.get('/get/:namespace/', dbController.retrieveAll, (req, res) => {
 });
 
 app.post('/createUser', usercontroller.hashing, usercontroller.createUser, (req,res) => {
-  return res.status(200).json(res.local.createdUser);
+  return res.status(200).json(res.locals.createdUser);
 })
 
 app.get('/login', usercontroller.login , (req, res) => {
