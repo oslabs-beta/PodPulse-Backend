@@ -8,8 +8,8 @@ const PORT = 3000;
 const app = express();
 
 const k8scontroller = require('./controllers/k8scontroller');
-const podcontroller = require('./controllers/podcontroller');
-const usercontroller = require('./controllers/usercontroller')
+const namespaceController = require('./controllers/namespaceController');
+const dbController = require('./controllers/dbController2');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -25,10 +25,18 @@ app.get('/getPods', k8scontroller.getPods, (req, res) => {
   return res.status(200).json(res.locals.result);
 });
 
-app.get('/pods/:namespace_name', podcontroller.loadPodData, (req, res) => {
-  // res.locals.result.forEach((element) => console.log('results: ', JSON.stringify(element)))
-  // console.log('RESULT 1: ', JSON.stringify(res.locals.result));
-  return res.status(200).json(res.locals.result);
+app.get(
+  '/pods/:namespace_name',
+  namespaceController.initializeNamespace,
+  (req, res) => {
+    // res.locals.result.forEach((element) => console.log('results: ', JSON.stringify(element)))
+    // console.log('RESULT 1: ', JSON.stringify(res.locals.result));
+    return res.status(200).json(res.locals.result);
+  }
+);
+
+app.get('/get/:namespace/', dbController.retrieveAll, (req, res) => {
+  return res.sendStatus(200).json(res.locals.namespaceData);
 });
 
 app.post('/createUser', usercontroller.hashing, usercontroller.createUser, (req,res) => {
