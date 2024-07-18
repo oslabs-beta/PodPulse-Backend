@@ -18,20 +18,19 @@ namespaceController.initializeNamespace = (req, res, next) => {
   const { namespace_name } = req.params;
   console.log('LOAD POD DATA');
 
-  const query = [
-    `
+  const query = `
     BEGIN
       ADD_NAMESPACE(:name, :user, :id);
     END;
-    `,
-    {
-      name: 'default', //would take from user input field, defaults to 'default'
-      user: 'test', //should come from url parameter
-      id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
-    },
-  ];
+    `;
 
-  db.query(query, 'PROC')
+  const binds = {
+    name: 'default', //would take from user input field, defaults to 'default'
+    user: 'test', //should come from url parameter
+    id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+  };
+
+  db.query(query, binds, true)
     .then((result) => {
       console.log('NAMESPACE RESULT: ', result);
       k8sApi.listNamespacedPod(namespace_name).then((result) => {
@@ -46,30 +45,29 @@ namespaceController.initializeNamespace = (req, res, next) => {
           for (let i = 0; i < pod_name_split.length - 2; i++)
             pod_name += pod_name_split[i];
 
-          const podQuery = [
-            `
+          const podQuery = `
     BEGIN
-      INIT_CONTAINER(:container_name, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
+      INIT_CONTAINER(:namespace_name, :container_name, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
     END;
-    `,
-            {
-              container_name: container.name,
-              log_time: Date.parse(
-                container.state.waiting
-                  ? 0
-                  : container.state.running
-                  ? container.state.running.startedAt //should probably use terminatedAt
-                  : container.state.terminated.startedAt
-              ),
-              pod_id_name: pod.metadata.name,
-              pod_name: pod_name,
-              pod_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
-              name_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
-              con_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
-            },
-          ];
+    `;
+          const podBinds = {
+            namespace_name: 'default',
+            container_name: container.name,
+            log_time: Date.parse(
+              container.state.waiting
+                ? 0
+                : container.state.running
+                ? container.state.running.startedAt //should probably use terminatedAt
+                : container.state.terminated.startedAt
+            ),
+            pod_id_name: pod.metadata.name,
+            pod_name: pod_name,
+            pod_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+            name_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+            con_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+          };
 
-          db.query(podQuery, (type = 'PROC')).then((result) => {
+          db.query(podQuery, podBinds, true).then((result) => {
             console.log('INIT RESULT: ', result);
           }); //probably add to res.locals here
         });

@@ -6,6 +6,12 @@ require('dotenv').config();
 // query(sqlQuery);
 
 function query(sqlQuery, binds = {}, isProcedure = false) {
+  const dbConfig = {
+    user: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    connectString: process.env.SVC_NAME,
+  };
+
   return new Promise((res, rej) => {
     oracledb
       .getConnection(dbConfig)
