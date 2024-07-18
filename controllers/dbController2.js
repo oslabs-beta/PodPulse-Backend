@@ -32,33 +32,38 @@ dbController.retrieveAll = (req, res, next) => {
   selectPodsByNamespace(namespace_db_id) //should output array of pods
     .then((pods) => {
       const podsArray = pods.map((pod) => {
-        selectContainersByPod(pod[0]) //access pod's db_id
+        return selectContainersByPod(pod[0]) //access pod's db_id
           .then((containers) => {
             const containersArray = containers.map((container) => {
-              selectRestartLogsByContainer(container[0]) //access container's db_id
+              return selectRestartLogsByContainer(container[0]) //access container's db_id
                 .then((logs) => {
                   const logsArray = logs.map((log) => {
                     return {
-                      restart_log_db_id: log[0],
-                      log_time: log[1],
-                      restart_person: log[2],
+                      container_name: container[0],
+                      container_db_id: container[1],
+                      cleared_at: container[2],
+                      restart_logs: logs.map(log => ({
+                        restart_log_db_id: log[0],
+                        log_time: log[1],
+                        restart_person: log[2],
+                      })),
                     };
                   });
-                  return {
-                    container_name: container[0],
-                    container_db_id: container[1],
-                    cleared_at: container[2],
-                    restart_logs: logsArray,
-                  };
                 });
             });
-            return {
-              pod_name: pod[0],
-              pod_db_id: pod[1],
-              containers: containersArray,
-            };
+            return Promise.all(containersArray)
+              .then(containers => {
+                return {
+                  pod_name: pod[0],
+                  pod_db_id: pod[1],
+                  containers: containers,
+                }
+              });
           });
       });
+      return Promise.all(pods);
+    })    
+    .then(podsArray => {
       res.locals.namespaceData = {
         namespace_name: 'default',
         namespace_db_id: namespace_db_id,
