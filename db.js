@@ -5,7 +5,30 @@ require('dotenv').config();
 
 // query(sqlQuery);
 
-const query = async function (sqlQuery, type = 'SELECT') {
+function query(sqlQuery, binds = {}, isProcedure = false) {
+  return new Promise((res, rej) => {
+    oracledb
+      .getConnection(dbConfig)
+      .then((con) => {
+        con
+          .execute(sqlQuery, binds, {
+            autoCommit: true,
+            maxRows: 0,
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+          })
+          .then((result) => {
+            // console.log('RESULT IN TEST_QUERY', result);
+            con.close();
+            res(isProcedure ? result.outBinds : result.rows);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+}
+
+const oldQuery = async function (sqlQuery, type = 'SELECT') {
   //confirm valid queryType
   const validTypes = ['SELECT', 'INSERT', 'PROC'];
   if (!validTypes.includes(type)) {
