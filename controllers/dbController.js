@@ -1,96 +1,108 @@
 const db = require('../db');
 const oracledb = require('oracledb');
+const k8s = require('@kubernetes/client-node');
+const kc = new k8s.KubeConfig();
+kc.loadFromDefault();
+const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
 const dbController = {};
 
-dbController.retrieveAll = async (req, res, next) => {
-  const namespace_db_id = 66;
+dbController.getNamespaceState = async (req, res, next) => {
+  let { username, namespace } = req.params;
+  // username = 'test';
+  // namespace = 'default';
 
-  function selectPodByNamespace(namespace_db_id) {
-    const podQuery = `SELECT pod_name, db_id FROM POD where namespace_db_id=${namespace_db_id}`;
-    db.query(podQuery, 'SELECT')
-      .then((results) => results)
-      .catch((err) => next(err));
+  function retrieveNamespace(username, namespace) {
+    const namespaceQuery = `Select json_object ( 'NAMESPACE_NAME' value ns.namespace_name, 'NAMESPACE_DB_ID' value ns.db_id, 'PODS' value json_arrayagg(pods_join.pods) ) from namespace ns join
+(Select pod.namespace_db_id, json_object( * ) pods from pod join
+(Select c.pod_db_id, json_arrayagg(json_object ( * )) containers from container c join
+(Select res.container_db_id, json_arrayagg( json_object ( * ) ) restart_logs  from restart_log res group by res.container_db_id) res_join
+on c.db_id = res_join.container_db_id group by c.pod_db_id) con_join
+on pod.db_id = con_join.pod_db_id) pods_join
+on ns.db_id = pods_join.namespace_db_id
+where ns.namespace_name = '${namespace}' and ns.user_db_id = (Select u.db_id from user_table u where u.username = '${username}')
+ group by ns.namespace_name, ns.db_id`;
+    return db.query(namespaceQuery);
   }
 
-  function selectContainerByPod(pod_db_id) {
-    const containerQuery = `SELECT container_name, db_id, cleared_at FROM CONTAINER where pod_db_id=${pod_db_id}`;
-    db.query(containerQuery, 'SELECT')
-      .then((results) => results)
-      .catch((err) => next(err));
-  }
+  retrieveNamespace(username, namespace)
+    .then((results) => {
+      console.log(results);
+      const resultObj = JSON.parse(Object.values(results[0])[0]);
+      res.locals.namespaceData = resultObj;
+      return next();
+    })
+    .catch((err) => next(err));
+};
 
-  // console.log('container info for pod at 68 = ', selectContainerByPod(68));
+//Namespace initialization
+dbController.initializeNamespace = (req, res, next) => {
+  //we'll need to retrieve namespace names from cluster as opposed to from client
+  const { username, namespace } = req.params;
+  console.log('LOAD POD DATA');
+  console.log(username + ' ' + namespace);
 
-  function selectRestartLogByContainer(container_db_id) {
-    const restartLogQuery = `SELECT db_id, log_time, restart_person FROM RESTART_LOG where container_db_id=${container_db_id}`;
-    db.query(restartLogQuery, 'SELECT')
-      .then((results) => results)
-      .catch((err) => next(err));
-  }
+  const query = `
+    BEGIN
+      ADD_NAMESPACE(:name, :user);
+    END;
+    `;
 
-  let pods = selectPodByNamespace(namespace_db_id);
-
-  pods = pods.map((pod) => {
-    let containers = selectContainerByPod(pod[0]); //access pod's db_id
-
-    containers = containers.map((container) => {
-      let restartLogs = selectRestartLogByContainer(container[0]); //access container's db_id
-
-      restartLogs = restartLogs.map((restartLog) => {
-        return {
-          restart_log_db_id: restartLog[0],
-          log_time: restartLog[1],
-          restart_person: restartLog[2],
-        };
-      });
-
-      return {
-        container_name: container[0],
-        container_db_id: container[1],
-        cleared_at: container[2],
-        restart_logs: restartLogs,
-      };
-    });
-
-    return {
-      pod_name: pod[0],
-      pod_db_id: pod[1],
-      containers: containers,
-    };
-  });
-
-  res.locals.namespaceData = {
-    namespace_name: 'default',
-    namespace_db_id: namespace_db_id,
-    pods: pods,
+  const binds = {
+    name: namespace, //would take from user input field, defaults to 'default'
+    user: username, //should come from url parameter
   };
 
-  next();
+  db.query(query, binds, true)
+    .then((result) => {
+      console.log('NAMESPACE RESULT: ', result);
+      k8sApi.listNamespacedPod(namespace).then((result) => {
+        const pods = result.body.items;
 
-  // res.locals.result = {
-  //   namespace_name: 'default',
-  //   namespace_db_id: 66,
-  //   pods [
-  //     {
-  //     pod_name,
-  //     pod_db_id,
-  //       containers: [            -> query containers table for every pod
-  //         {  container_name,
-  //         container_db_id,
-  //         cleared_at,
-  //         restart_logs: [
-  //           {
-  //           restart_log_db_id,
-  //           log_time,
-  //           restart_person
-  //                }
-  //         ]
-  //            }
-  //       ]
-  //     }
-  //   ]
-  // }
+        pods.forEach((pod) => {
+          const container = pod.status.containerStatuses[0];
+          // console.log('CONTAINER: ', container);
+
+          const pod_name_split = pod.metadata.name.split('-');
+          let pod_name = '';
+          for (let i = 0; i < pod_name_split.length - 2; i++)
+            pod_name += pod_name_split[i];
+
+          const podQuery = `
+    BEGIN
+      INIT_CONTAINER(:namespace_name, :username, :container_name, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
+    END;
+    `;
+          const podBinds = {
+            namespace_name: namespace,
+            username: username,
+            container_name: container.name,
+            log_time: Date.parse(
+              container.state.waiting
+                ? 0
+                : container.state.running
+                ? container.state.running.startedAt //should probably use terminatedAt
+                : container.state.terminated.startedAt
+            ),
+            pod_id_name: pod.metadata.name,
+            pod_name: pod_name,
+            pod_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+            name_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+            con_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+          };
+
+          db.query(podQuery, podBinds, true).then((result) => {
+            console.log('INIT RESULT: ', result);
+          }); //probably add to res.locals here
+        });
+      });
+    })
+    .then(() => {
+      return next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 module.exports = dbController;
