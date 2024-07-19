@@ -1,27 +1,26 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
 // const demoData = require('./demo-data');
 
 const PORT = 3000;
 const app = express();
 
+const authcontroller = require('./controllers/authcontroller');
 const k8scontroller = require('./controllers/k8scontroller'); //temporarily out of commission
 const dbController = require('./controllers/dbController');
 const usercontroller = require('./controllers/usercontroller');
+const { addOrUpdateObject } = require('@kubernetes/client-node');
 
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
-
-// app.get('/test-data', (req, res) => {
-//   res.json(demoData);
-// });
+app.use(cookieParser());
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
-  // res.locals.result.forEach((element) => console.log('results: ', JSON.stringify(element)))
-  // console.log('RESULT 1: ', JSON.stringify(res.locals.result));
   return res.status(200).json(res.locals.result);
 });
 
@@ -29,11 +28,19 @@ app.get(
   '/initializeNamespace/:username/:namespace',
   dbController.initializeNamespace,
   (req, res) => {
-    // res.locals.result.forEach((element) => console.log('results: ', JSON.stringify(element)))
-    // console.log('RESULT 1: ', JSON.stringify(res.locals.result));
     return res.status(200).json(res.locals.result);
   }
 );
+
+app.get('/auth', authcontroller.verify, (req, res) => {
+  console.log('made it out');
+  return res.status(200).json(res.locals.verification);
+});
+
+app.get('/auth', authcontroller.verify, (req, res) => {
+  console.log('made it out');
+  return res.status(200).json(res.locals.verification);
+});
 
 app.get(
   '/getNamespaceState/:username/:namespace/',
@@ -52,8 +59,11 @@ app.post(
   }
 );
 
-app.get('/login', usercontroller.login, (req, res) => {
-  return res.status(200).json('placeholder');
+app.post('/login', usercontroller.login, (req, res) => {
+  return res
+    .status(200)
+    .cookie('secretCookie', res.locals.jwt, { httpOnly: true })
+    .json(res.locals.jwt);
 });
 
 app.get('/*', function (req, res) {
