@@ -4,11 +4,12 @@ const jwt = require("jsonwebtoken");
 authcontroller = {}
 
 authcontroller.verify = (req, res, next) => {
-    const { secretCookie } = req.body;
+    const { token } = req.cookies.secretCookie; //req.cookies = {cookie: options: { } , cookie:' '}
+    console.log(token)
     try{
-        if (secretCookie){
+        if (token){
         console.log('token exists')
-      const decoded =  jwt.verify(secretCookie, process.env.JWT_SECRET);
+      const decoded =  jwt.verify(token, process.env.JWT_SECRET);
       res.locals.verification = {
         login: true,
         data: decoded,
@@ -19,7 +20,9 @@ authcontroller.verify = (req, res, next) => {
       res.locals.verification ={
         login: false,
         data: 'error'
-      } 
+      }
+
+      res.clearCookie('secretCookie').redirect('/login') 
     } 
     } catch (err) {
         return next({

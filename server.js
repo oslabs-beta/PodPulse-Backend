@@ -22,32 +22,33 @@ app.use(express.urlencoded());
 app.use(cors());
 app.use(cookieParser());
 
+app.get('/auth', authcontroller.verify, (req, res) => {
+  console.log('made it out')
+  return res.status(200).json(res.locals.verification)
+})
 
 
-app.get('/getPods', k8scontroller.getPods, (req, res) => {
+app.get('/getPods', authcontroller.verify, k8scontroller.getPods, (req, res) => {
 
   return res.status(200).json(res.locals.result);
 });
 
 app.get(
-  '/pods/:namespace_name',
+  '/pods/:namespace_name', 
   namespaceController.initializeNamespace,
   (req, res) => {
     return res.status(200).json(res.locals.result);
   }
 );
 
-app.get('/auth', authcontroller.verify, (req, res) => {
-  console.log('made it out')
-  return res.status(200).json(res.locals.verification)
-})
+
 
 app.get('/get/:namespace/', dbController.retrieveAll, (req, res) => {
   return res.sendStatus(200).json(res.locals.namespaceData);
 });
 
 app.post('/createUser', usercontroller.hashing, usercontroller.createUser, (req,res) => {
-  return res.status(200).json(res.locals.createdUser);
+  return res.redirect('/login');
 })
 
 app.post('/login', usercontroller.login , (req, res) => {
