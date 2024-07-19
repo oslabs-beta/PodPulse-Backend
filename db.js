@@ -16,14 +16,28 @@ function query(sqlQuery, binds = {}, isProcedure = false) {
     oracledb
       .getConnection(dbConfig)
       .then((con) => {
+        console.log('BINDS: ', binds);
+        oracledb.fetchAsString = [oracledb.CLOB];
         con
           .execute(sqlQuery, binds, {
             autoCommit: true,
-            maxRows: 0,
+            // maxRows: 0,
             outFormat: oracledb.OUT_FORMAT_OBJECT,
+            fetchTypeHandler: function (metaData) {
+              console.log(metaData);
+              if (metaData.dbType == oracledb.DB_TYPE_CLOB) {
+                console.log('FOUND!!!');
+                return { type: oracledb.STRING };
+              }
+            },
+            // fetchInfo: { STATE_JSON: { type: oracledb.STRING } },
           })
           .then((result) => {
-            // console.log('RESULT IN TEST_QUERY', result);
+            // console.log('RESULT IN TEST_QUERY',; result);
+            // console.log('KEY: ', Object.keys(result.outBinds)[0]);
+            // const clob = result[Object.keys(result.outBinds)[0]].getData();
+            // console.log(clob);
+            console.log(result.outBinds.state_json.createLobReader());
             con.close();
             res(isProcedure ? result.outBinds : result.rows);
           });

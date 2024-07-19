@@ -7,6 +7,22 @@ dbController.retrieveAll = (req, res, next) => {
   console.log('NAMESPACE: ', req.params);
   const ns = ({ namespace } = req.params);
 
+  const query = `
+    BEGIN
+      GET_STATE(:namespace_name, :state_json);
+    END;
+  `;
+
+  const binds = {
+    namespace_name: 'default',
+    state_json: { dir: oracledb.BIND_OUT, type: oracledb.CLOB },
+  };
+
+  db.query(query, binds, true).then((result) => {
+    //console.log(result.state_json);
+  });
+  return next();
+
   const namespace_db_id = 81;
 
   function selectPodsByNamespace(namespace_db_id) {
