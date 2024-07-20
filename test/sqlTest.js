@@ -1,4 +1,4 @@
-const { query } = require('./db.js');
+const { query } = require('../server/db.js');
 
 //input query string as argument, optional second argument for type (defaults to select)
 

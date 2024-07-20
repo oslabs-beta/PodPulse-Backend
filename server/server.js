@@ -9,10 +9,10 @@ require('dotenv').config();
 const PORT = 3000;
 const app = express();
 
-const authcontroller = require('./controllers/authcontroller');
-const k8scontroller = require('./controllers/k8scontroller'); //temporarily out of commission
-const dbController = require('./controllers/dbController');
-const usercontroller = require('./controllers/usercontroller');
+const authcontroller = require('../controllers/authcontroller');
+const k8scontroller = require('../controllers/k8scontroller'); //temporarily out of commission
+const dbController = require('../controllers/dbController');
+const usercontroller = require('../controllers/usercontroller');
 const { addOrUpdateObject } = require('@kubernetes/client-node');
 
 app.use(express.json());
