@@ -1,4 +1,4 @@
-const k8sApi = require('../k8sApi');
+const k8sApi = require('../server/k8sApi');
 console.log(k8sApi.basePath);
 
 const k8scontroller = {};
