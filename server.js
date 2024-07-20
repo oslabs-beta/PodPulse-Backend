@@ -37,11 +37,6 @@ app.get('/auth', authcontroller.verify, (req, res) => {
   return res.status(200).json(res.locals.verification);
 });
 
-app.get('/auth', authcontroller.verify, (req, res) => {
-  console.log('made it out');
-  return res.status(200).json(res.locals.verification);
-});
-
 app.get(
   '/getNamespaceState/:username/:namespace/',
   dbController.getNamespaceState,
