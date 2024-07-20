@@ -27,7 +27,6 @@ app.get('/auth', authcontroller.verify, (req, res) => {
 
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
-app.get('/getPods', authcontroller.verify, k8scontroller.getPods, (req, res) => {
 
   return res.status(200).json(res.locals.result);
 });
@@ -39,10 +38,6 @@ app.get(
     return res.status(200).json(res.locals.result);
   }
 );
-
-
-
-
 
 app.get(
   '/getNamespaceState/:username/:namespace/',
