@@ -1,9 +1,4 @@
-const k8s = require('@kubernetes/client-node');
-const kc = new k8s.KubeConfig();
-
-// kc.makeApiClient();
-kc.loadFromDefault();
-const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+const k8sApi = require('../server/k8sApi');
 console.log(k8sApi.basePath);
 
 const k8scontroller = {};

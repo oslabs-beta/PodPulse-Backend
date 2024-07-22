@@ -1,9 +1,6 @@
-const db = require('../db');
+const db = require('../server/db');
 const oracledb = require('oracledb');
-const k8s = require('@kubernetes/client-node');
-const kc = new k8s.KubeConfig();
-kc.loadFromDefault();
-const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+const k8sApi = require('../server/k8sApi');
 
 const dbController = {};
 
@@ -70,19 +67,20 @@ dbController.initializeNamespace = (req, res, next) => {
 
           const podQuery = `
     BEGIN
-      INIT_CONTAINER(:namespace_name, :username, :container_name, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
+      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
     END;
     `;
           const podBinds = {
             namespace_name: namespace,
             username: username,
             container_name: container.name,
+            container_restart_count: container.restartCount,
             log_time: Date.parse(
               container.state.waiting
                 ? 0
                 : container.state.running
                 ? container.state.running.startedAt //should probably use terminatedAt
-                : container.state.terminated.startedAt
+                : container.state.terminated.finishedAt
             ),
             pod_id_name: pod.metadata.name,
             pod_name: pod_name,
