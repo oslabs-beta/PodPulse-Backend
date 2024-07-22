@@ -17,12 +17,13 @@ authcontroller.verify = (req, res, next) => {
       console.log('decoded')
       return next();
     } else {
+      console.log('no token')
       res.locals.verification ={
         login: false,
         data: 'error'
       }
 
-      res.clearCookie('secretCookie').redirect('/login') 
+      return res.status(406).json({message: 'invalid credentials'}) 
     } 
     } catch (err) {
         return next({
