@@ -67,7 +67,7 @@ dbController.initializeNamespace = (req, res, next) => {
 
           const podQuery = `
     BEGIN
-      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
+      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
     END;
     `;
           const podBinds = {
@@ -79,7 +79,7 @@ dbController.initializeNamespace = (req, res, next) => {
               container.state.waiting
                 ? 0
                 : container.state.running
-                ? container.state.running.startedAt //should probably use terminatedAt
+                ? container.state.running.terminated //should probably use terminatedAt
                 : container.state.terminated.finishedAt
             ),
             pod_id_name: pod.metadata.name,

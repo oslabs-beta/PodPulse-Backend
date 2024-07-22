@@ -14,6 +14,7 @@ const k8scontroller = require('../controllers/k8scontroller'); //temporarily out
 const dbController = require('../controllers/dbController');
 const usercontroller = require('../controllers/usercontroller');
 const { addOrUpdateObject } = require('@kubernetes/client-node');
+const { updateTestController } = require('../functions/dbCheck');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -44,6 +45,10 @@ app.get(
     return res.status(200).json(res.locals.namespaceData);
   }
 );
+
+app.get('/testUpdate', updateTestController.testUpdate, (req, res) => {
+  return res.status(200).json({ yo: 'yo' });
+});
 
 app.post(
   '/createUser',
