@@ -4,6 +4,22 @@ const k8sApi = require('../k8sApi');
 
 const dbController = {};
 
+dbController.getNamespaceList = async (req, res, next) => {
+  const namespaceListQuery = `SELECT namespace_name FROM NAMESPACE where user_db_id = (SELECT db_id from USER_TABLE where username = :username)`;
+  const binds = {
+    username: req.cookies.secretCookie.data.userName,
+  };
+
+  db.query(namespaceListQuery, binds).then((results) => {
+    const namespaceList = [];
+    for (let db_obj of results) {
+      namespaceList.push(db_obj.NAMESPACE_NAME);
+    }
+    res.locals.namespaceList = namespaceList;
+    return next();
+  });
+};
+
 dbController.getNamespaceState = async (req, res, next) => {
   let { username, namespace } = req.params;
   // username = 'test';
@@ -67,13 +83,14 @@ dbController.initializeNamespace = (req, res, next) => {
 
           const podQuery = `
     BEGIN
-      INIT_CONTAINER(:namespace_name, :username, :container_name, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
+      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
     END;
     `;
           const podBinds = {
             namespace_name: namespace,
             username: username,
             container_name: container.name,
+            container_restart_count: container.restartCount,
             log_time: Date.parse(
               container.state.waiting
                 ? 0

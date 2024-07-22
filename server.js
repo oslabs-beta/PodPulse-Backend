@@ -20,6 +20,10 @@ app.use(express.urlencoded());
 app.use(cors());
 app.use(cookieParser());
 
+app.get('/getNamespaceList', dbController.getNamespaceList, (req, res) => {
+  return res.status(200).json(res.locals.namespaceList);
+});
+
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
   return res.status(200).json(res.locals.result);
 });
