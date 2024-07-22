@@ -99,10 +99,11 @@ dbController.checkNamespaceNotInDB = async (req, res, next) => {
 };
 
 dbController.initializeNamespace = async (req, res, next) => {
-  const { username, namespace } = req.params;
+  const { namespace } = req.params;
+  const { userName } = req.cookies.secretCookie.data;
   console.log('LOAD POD DATA');
 
-  console.log(username + ' ' + namespace);
+  console.log(userName + ' ' + namespace);
 
   const query = `
     BEGIN
@@ -112,7 +113,7 @@ dbController.initializeNamespace = async (req, res, next) => {
 
   const binds = {
     name: namespace, //would take from user input field, defaults to 'default'
-    user: username, //should come from url parameter
+    user: userName, //comes from cookie
   };
 
   db.query(query, binds, true)
@@ -137,7 +138,7 @@ dbController.initializeNamespace = async (req, res, next) => {
     `;
           const podBinds = {
             namespace_name: namespace,
-            username: username,
+            username: userName,
             container_name: container.name,
             container_restart_count: container.restartCount,
             log_time: Date.parse(
