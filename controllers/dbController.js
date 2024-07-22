@@ -49,10 +49,59 @@ where ns.namespace_name = '${namespace}' and ns.user_db_id = (Select u.db_id fro
 };
 
 //Namespace initialization
-dbController.initializeNamespace = (req, res, next) => {
-  //we'll need to retrieve namespace names from cluster as opposed to from client
+
+dbController.checkNamespaceExists = async (req, res, next) => {
+  //retrieve namespace names from cluster
+  existingNamespaceArray = [];
+  await k8sApi.listNamespace().then((res) => {
+    for (let namespace of res.body.items) {
+      existingNamespaceArray.push(namespace.metadata.name);
+      console.log(existingNamespaceArray);
+    }
+  });
+
+  const { namespace } = req.params;
+
+  for (const name of existingNamespaceArray) {
+    if (name === namespace) {
+      console.log('namespace found!');
+      return next();
+    }
+  }
+
+  //If namespace isn't accessible by k8s api
+  return next({
+    log: 'Given namespace not found in list of API-accesible namespaces when calling dbController.checkNamespaceExists',
+    status: 500,
+    message: 'Namespace not found/accessible.',
+  });
+};
+
+dbController.checkNamespaceNotInDB = async (req, res, next) => {
+  const { namespace } = req.params;
+  const namespaceInDBQuery = `SELECT db_id FROM NAMESPACE where user_db_id = (SELECT db_id from USER_TABLE where username = :username) and namespace_name = :namespace`;
+  const binds = {
+    username: 'jeremiah', //req.cookies.secretCookie.data.userName,
+    namespace: namespace,
+  };
+
+  db.query(namespaceInDBQuery, binds).then((results) => {
+    console.log(results);
+    if (results.length === 0) {
+      return next();
+    } else
+      return next({
+        log: 'Given namespace already exists for this user',
+        status: 500,
+        message: "You've already initialized a namespace with this name",
+      });
+  });
+};
+
+dbController.initializeNamespace = async (req, res, next) => {
   const { username, namespace } = req.params;
   console.log('LOAD POD DATA');
+
   console.log(username + ' ' + namespace);
 
   const query = `

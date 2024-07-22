@@ -36,6 +36,15 @@ app.get(
   }
 );
 
+app.get(
+  '/testing/:namespace',
+  dbController.checkNamespaceExists,
+  dbController.checkNamespaceNotInDB,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
+
 app.get('/auth', authcontroller.verify, (req, res) => {
   console.log('made it out');
   return res.status(200).json(res.locals.verification);
