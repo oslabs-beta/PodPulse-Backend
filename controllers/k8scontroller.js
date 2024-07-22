@@ -54,9 +54,10 @@ k8scontroller.getPods = (req, res, next) => {
               .terminated.exitCode,
         });
       }
-      next();
+      return next();
     })
     .catch((err) => {
+      console.log('error')
       next(err);
     });
 };

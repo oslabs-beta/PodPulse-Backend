@@ -20,13 +20,19 @@ app.use(express.urlencoded());
 app.use(cors());
 app.use(cookieParser());
 
+
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
+
   return res.status(200).json(res.locals.result);
 });
 
+// app.get('/Nodes', authcontroller.verify, (req, res) => {
+//   return res.status(200)
+// })
+
 app.get(
   '/initializeNamespace/:username/:namespace',
-  dbController.initializeNamespace,
+   dbController.initializeNamespace,
   (req, res) => {
     return res.status(200).json(res.locals.result);
   }
@@ -45,19 +51,14 @@ app.get(
   }
 );
 
-app.post(
-  '/createUser',
-  usercontroller.hashing,
-  usercontroller.createUser,
-  (req, res) => {
-    return res.status(200).json(res.locals.createdUser);
-  }
-);
+app.post('/createUser', usercontroller.hashing, usercontroller.createUser, (req,res) => {
+  return res.redirect('/');
+})
 
-app.post('/login', usercontroller.login, (req, res) => {
+app.post('/', usercontroller.login, (req, res) => {
   return res
     .status(200)
-    .cookie('secretCookie', res.locals.jwt, { httpOnly: true })
+    .cookie('secretCookie', res.locals.jwt, { maxAge: 60* 1000})
     .json(res.locals.jwt);
 });
 
