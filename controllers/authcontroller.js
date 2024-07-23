@@ -1,36 +1,35 @@
+const jwt = require('jsonwebtoken');
 
-const jwt = require("jsonwebtoken");
-
-authcontroller = {}
+authcontroller = {};
 
 authcontroller.verify = (req, res, next) => {
-    const { secretCookie } = req.body;
-    try{
-        if (secretCookie){
-        console.log('token exists')
-      const decoded =  jwt.verify(secretCookie, process.env.JWT_SECRET);
+  const { token } = req.cookies.secretCookie; //req.cookies = {cookie: options: { } , cookie:' '}
+  console.log(token);
+  try {
+    if (token) {
+      console.log('token exists');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       res.locals.verification = {
         login: true,
         data: decoded,
-      }
-      console.log('decoded')
+      };
+      console.log('decoded');
       return next();
     } else {
-      res.locals.verification ={
+      console.log('no token');
+      res.locals.verification = {
         login: false,
-        data: 'error'
-      } 
-    } 
-    } catch (err) {
-        return next({
-            log: err,
-            message: {err: 'big error in jwt verification'}
-        })
+        data: 'error',
+      };
+
+      return res.status(406).json({ message: 'invalid credentials' });
     }
- 
-}
+  } catch (err) {
+    return next({
+      log: err,
+      message: { err: 'big error in jwt verification' },
+    });
+  }
+};
 
-
-module.exports = authcontroller
-
-
+module.exports = authcontroller;

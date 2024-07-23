@@ -53,7 +53,7 @@ app.get('/auth', authcontroller.verify, (req, res) => {
 });
 
 app.get(
-  '/getNamespaceState/:username/:namespace/',
+  '/getNamespaceState/:namespace/',
   dbController.getNamespaceState,
   (req, res) => {
     return res.status(200).json(res.locals.namespaceData);
@@ -72,7 +72,10 @@ app.post(
 app.post('/login', usercontroller.login, (req, res) => {
   return res
     .status(200)
-    .cookie('secretCookie', res.locals.jwt, { httpOnly: true })
+    .cookie('secretCookie', res.locals.jwt, {
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+    })
     .json(res.locals.jwt);
 });
 

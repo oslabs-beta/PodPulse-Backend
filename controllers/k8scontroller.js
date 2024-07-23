@@ -4,6 +4,9 @@ console.log(k8sApi.basePath);
 const k8scontroller = {};
 
 k8scontroller.getPods = (req, res, next) => {
+  // k8sApi.listNamespace().then((data) => {const nameSpaces = data.body.items
+  //   nameSpaces.forEach((el) => console.log('name:', el.metadata.name))
+  // }) -> List namespaces
   // k8sApi
   //   .readNamespacedPodLog('ecs-test-6845b4b944-hbcjk', 'default')
   //   .then((result) => {
