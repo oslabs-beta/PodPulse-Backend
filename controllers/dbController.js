@@ -1,6 +1,6 @@
-const db = require('../../server/db');
+const db = require('../server/db');
 const oracledb = require('oracledb');
-const k8sApi = require('../../server/k8sApi');
+const k8sApi = require('../server/k8sApi');
 
 const dbController = {};
 
@@ -140,6 +140,7 @@ dbController.initializeNamespace = async (req, res, next) => {
             namespace_name: namespace,
             username: userName,
             container_name: container.name,
+            container_restart_count: container.restartCount,
             container_restart_count: container.restartCount,
             log_time: Date.parse(
               container.state.waiting

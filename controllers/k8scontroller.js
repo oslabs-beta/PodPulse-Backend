@@ -1,4 +1,4 @@
-const k8sApi = require('../../server/k8sApi');
+const k8sApi = require('../server/k8sApi');
 console.log(k8sApi.basePath);
 
 const k8scontroller = {};
@@ -54,9 +54,10 @@ k8scontroller.getPods = (req, res, next) => {
               .terminated.exitCode,
         });
       }
-      next();
+      return next();
     })
     .catch((err) => {
+      console.log('error');
       next(err);
     });
 };
