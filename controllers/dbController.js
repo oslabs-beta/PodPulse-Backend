@@ -1,6 +1,6 @@
-const db = require('../db');
+const db = require('../../server/db');
 const oracledb = require('oracledb');
-const k8sApi = require('../k8sApi');
+const k8sApi = require('../../server/k8sApi');
 
 const dbController = {};
 
