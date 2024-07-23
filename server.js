@@ -20,7 +20,7 @@ app.use(express.urlencoded());
 app.use(cors());
 app.use(cookieParser());
 
-app.get('/getNamespaceList', dbController.getNamespaceList, (req, res) => {
+app.get('/getNamespaceList', authcontroller.verify, dbController.getNamespaceList, (req, res) => {
   return res.status(200).json(res.locals.namespaceList);
 });
 
@@ -30,6 +30,7 @@ app.get('/getPods', k8scontroller.getPods, (req, res) => {
 
 app.get(
   '/initializeNamespace/:namespace',
+  authcontroller.verify,
   dbController.checkNamespaceExists,
   dbController.checkNamespaceNotInDB,
   dbController.initializeNamespace,
@@ -54,7 +55,7 @@ app.get('/auth', authcontroller.verify, (req, res) => {
 
 app.get(
   '/getNamespaceState/:namespace/',
-  dbController.getNamespaceState,
+  authcontroller.verify, dbController.getNamespaceState,
   (req, res) => {
     return res.status(200).json(res.locals.namespaceData);
   }

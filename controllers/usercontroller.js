@@ -75,6 +75,11 @@ userController.login = async (req, res, next) => {
           message: { err: 'big login error' },
         });
       }
+    } else {
+      return next({
+        log: 'wrong user or password',
+        message: { err: 'wrong user/password'}
+      })
     }
 
     // console.log(queryResult)
