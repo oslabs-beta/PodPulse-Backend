@@ -4,6 +4,22 @@ const k8sApi = require('../server/k8sApi');
 
 const dbController = {};
 
+dbController.getNamespaceList = async (req, res, next) => {
+  const namespaceListQuery = `SELECT namespace_name FROM NAMESPACE where user_db_id = (SELECT db_id from USER_TABLE where username = :username)`;
+  const binds = {
+    username: req.cookies.secretCookie.data.userName,
+  };
+
+  db.query(namespaceListQuery, binds).then((results) => {
+    const namespaceList = [];
+    for (let db_obj of results) {
+      namespaceList.push(db_obj.NAMESPACE_NAME);
+    }
+    res.locals.namespaceList = namespaceList;
+    return next();
+  });
+};
+
 dbController.getNamespaceState = async (req, res, next) => {
   let { username, namespace } = req.params;
   // username = 'test';
@@ -33,11 +49,61 @@ where ns.namespace_name = '${namespace}' and ns.user_db_id = (Select u.db_id fro
 };
 
 //Namespace initialization
-dbController.initializeNamespace = (req, res, next) => {
-  //we'll need to retrieve namespace names from cluster as opposed to from client
-  const { username, namespace } = req.params;
+
+dbController.checkNamespaceExists = async (req, res, next) => {
+  //retrieve namespace names from cluster
+  existingNamespaceArray = [];
+  await k8sApi.listNamespace().then((res) => {
+    for (let namespace of res.body.items) {
+      existingNamespaceArray.push(namespace.metadata.name);
+      console.log(existingNamespaceArray);
+    }
+  });
+
+  const { namespace } = req.params;
+
+  for (const name of existingNamespaceArray) {
+    if (name === namespace) {
+      console.log('namespace found!');
+      return next();
+    }
+  }
+
+  //If namespace isn't accessible by k8s api
+  return next({
+    log: 'Given namespace not found in list of API-accesible namespaces when calling dbController.checkNamespaceExists',
+    status: 500,
+    message: 'Namespace not found/accessible.',
+  });
+};
+
+dbController.checkNamespaceNotInDB = async (req, res, next) => {
+  const { namespace } = req.params;
+  const namespaceInDBQuery = `SELECT db_id FROM NAMESPACE where user_db_id = (SELECT db_id from USER_TABLE where username = :username) and namespace_name = :namespace`;
+  const binds = {
+    username: 'jeremiah', //req.cookies.secretCookie.data.userName,
+    namespace: namespace,
+  };
+
+  db.query(namespaceInDBQuery, binds).then((results) => {
+    console.log(results);
+    if (results.length === 0) {
+      return next();
+    } else
+      return next({
+        log: 'Given namespace already exists for this user',
+        status: 500,
+        message: "You've already initialized a namespace with this name",
+      });
+  });
+};
+
+dbController.initializeNamespace = async (req, res, next) => {
+  const { namespace } = req.params;
+  const { userName } = req.cookies.secretCookie.data;
   console.log('LOAD POD DATA');
-  console.log(username + ' ' + namespace);
+
+  console.log(userName + ' ' + namespace);
 
   const query = `
     BEGIN
@@ -47,7 +113,7 @@ dbController.initializeNamespace = (req, res, next) => {
 
   const binds = {
     name: namespace, //would take from user input field, defaults to 'default'
-    user: username, //should come from url parameter
+    user: userName, //comes from cookie
   };
 
   db.query(query, binds, true)
@@ -67,13 +133,14 @@ dbController.initializeNamespace = (req, res, next) => {
 
           const podQuery = `
     BEGIN
-      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
+      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
     END;
     `;
           const podBinds = {
             namespace_name: namespace,
-            username: username,
+            username: userName,
             container_name: container.name,
+            container_restart_count: container.restartCount,
             container_restart_count: container.restartCount,
             log_time: Date.parse(
               container.state.waiting
