@@ -7,7 +7,7 @@ require('dotenv').config();
 
 function query(sqlQuery, binds = {}, isProcedure = false) {
   const dbConfig = {
-    user: process.env.USERNAME,
+    user: process.env.DB_USERNAME,
     password: process.env.PASSWORD,
     connectString: process.env.SVC_NAME,
   };

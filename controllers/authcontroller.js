@@ -3,9 +3,20 @@ const db = require('../db');
 
 authcontroller = {};
 
-authcontroller.verify = (req, res, next) => {
+authcontroller.verify = async (req, res, next) => {
+  if(!req.cookies.secretCookie){
+    res.locals.verification = {
+      login: false,
+      data: 'error',
+    };
+    console.log(res.locals.verification, 'is')
+    return next();
+  }
   const { token } = req.cookies.secretCookie; //req.cookies = {cookie: options: { } , cookie:' '}
-  console.log(token);
+  const userName = req.cookies.secretCookie.data.userName
+  const userQuery = await db.query(
+    `SELECT username from USER_TABLE WHERE USERNAME = '${userName}'`
+  )
   try {
     if (token) {
       console.log('token exists');
@@ -13,11 +24,13 @@ authcontroller.verify = (req, res, next) => {
       res.locals.verification = {
         login: true,
         data: decoded,
+        userQuery: userQuery,
       };
       console.log('decoded');
+      
       return next();
     } else {
-      console.log('no token');
+      console.log('no token, invalid user');
       res.locals.verification = {
         login: false,
         data: 'error',
@@ -26,10 +39,7 @@ authcontroller.verify = (req, res, next) => {
       return res.status(406).json({ message: 'invalid credentials' });
     }
   } catch (err) {
-    return next({
-      log: err,
-      message: { err: 'big error in jwt verification' },
-    });
+    return res.redirect('/login')
   }
 };
 
