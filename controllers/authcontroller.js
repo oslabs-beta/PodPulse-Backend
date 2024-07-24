@@ -12,13 +12,13 @@ authcontroller.verify = async (req, res, next) => {
     console.log(res.locals.verification, 'is');
     return next();
   }
-  const { token } = req.cookies.secretCookie; //req.cookies = {cookie: options: { } , cookie:' '}
-  const userName = req.cookies.secretCookie.data.userName;
+  const { token, status } = req.cookies.secretCookie; //req.cookies = {cookie: options: { } , cookie:' '}
+  const userName = req.cookies.secretCookie.data.userName
   const userQuery = await db.query(
     `SELECT username from USER_TABLE WHERE USERNAME = '${userName}'`
   );
   try {
-    if (token) {
+    if (token && status === 'success' && userQuery.length !== 0) {
       console.log('token exists');
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       res.locals.verification = {

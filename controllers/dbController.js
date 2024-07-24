@@ -106,6 +106,8 @@ dbController.initializeNamespace = async (req, res, next) => {
 
   console.log(userName + ' ' + namespace);
 
+  
+
   const query = `
     BEGIN
       ADD_NAMESPACE(:name, :user);
@@ -122,7 +124,6 @@ dbController.initializeNamespace = async (req, res, next) => {
       console.log('NAMESPACE RESULT: ', result);
       k8sApi.listNamespacedPod(namespace).then((result) => {
         const pods = result.body.items;
-
         pods.forEach((pod) => {
           const container = pod.status.containerStatuses[0];
           // console.log('CONTAINER: ', container);
@@ -152,6 +153,7 @@ dbController.initializeNamespace = async (req, res, next) => {
             pod_id_name: pod.metadata.name,
             pod_name: pod_name,
           };
+          console.log('pod binds,', podBinds)
 
           db.query(podQuery, podBinds, true).then((result) => {
             console.log('INIT RESULT: ', result);
