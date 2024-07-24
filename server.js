@@ -53,6 +53,11 @@ app.get('/auth', authcontroller.verify, (req, res) => {
   return res.status(200).json(res.locals.verification);
 });
 
+app.get('/logout', (req, res) => {
+  console.log('logging out', req.cookies)
+  return res.status(200).clearCookie('secretCookie').send('cookies cleared')
+})
+
 app.get(
   '/getNamespaceState/:namespace/',
   authcontroller.verify, dbController.getNamespaceState,
