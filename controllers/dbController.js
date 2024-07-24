@@ -124,6 +124,7 @@ dbController.initializeNamespace = async (req, res, next) => {
       .listNamespacedPod(namespace)
       .then((result) => {
         const pods = result.body.items;
+        const promiseArray = [];
 
         pods.forEach((pod) => {
           const pod_name_split = pod.metadata.name.split('-');
@@ -153,10 +154,12 @@ dbController.initializeNamespace = async (req, res, next) => {
               pod_name: pod_name,
             };
 
-            db.query(podQuery, podBinds, true).then((result) => {
-              console.log('INIT RESULT: ', result);
-            }); //probably add to res.locals here
+            promiseArray.push(db.query(podQuery, podBinds, true));
           });
+        });
+
+        Promise.all(promiseArray).then((results) => {
+          console.log(JSON.stringify(results, null, 2));
         });
       })
       .then(() => {

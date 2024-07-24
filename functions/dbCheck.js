@@ -12,9 +12,9 @@ kc.loadFromDefault();
 
 const updateTestController = {};
 
-function file(obj) {
+function file(obj, filename) {
   fs.writeFile(
-    path.resolve(__dirname, 'namespace.json'),
+    path.resolve(__dirname, filename + '.json'),
     JSON.stringify(obj, null, 2),
     'utf8',
     (error) => {
@@ -28,42 +28,156 @@ function file(obj) {
 }
 
 updateTestController.testUpdate = (req, res, next) => {
-  function createUpdateFunction(username = 'test', namespace = 'default') {
+  async function createUpdateFunction(
+    username = 'test',
+    namespace = 'default'
+  ) {
     const u = undefined;
     const apiPath = '/api/v1/pods';
     const watch = new k8s.Watch(kc);
 
-    //const listFn = (ns = namespace) => k8sApi.listNamespacedPod(ns);
+    // const listFn = (ns = namespace) => k8sApi.listNamespacedPod(ns);
     const listFn = () => k8sApi.listPodForAllNamespaces();
-    const cache = new k8s.ListWatch(apiPath, watch, listFn);
+    const cache = new k8s.ListWatch(apiPath, watch, listFn, false);
     const podCache = {};
 
-    const getRelevantIds = () => {};
-
-    const updateContainerForPodInNamespace = () => {
-      const query = `
-      
+    const getRelevantIds = async () => {
+      let query = `
+      Select * from namespace ns where ns.namespace_name = :namespace and ns.user_db_id =
+      (Select db_id from user_table where username = :username)
       `;
+
+      let binds = {
+        namespace: namespace,
+        username: username,
+      };
+
+      let res = await db.query(query, binds, false);
+      console.log('IDS: ', res);
+      podCache[username] = res[0].USER_DB_ID;
+      podCache[namespace] = res[0].DB_ID;
+      console.log(podCache);
+
+      query = `
+      Select db_id, pod_id from pod where namespace_db_id = :ns_id
+      `;
+
+      binds = { ns_id: podCache[namespace] };
+
+      res = await db.query(query, binds, false);
+
+      podCache.pods = {};
+      let podIdList = '(';
+
+      res.forEach((row) => {
+        podCache.pods[row.POD_ID] = { id: row.DB_ID };
+        podIdList += row.DB_ID + ', ';
+      });
+
+      podIdList = podIdList.slice(0, podIdList.length - 2) + ')';
+
+      query = `
+      Select c.db_id, c.container_name, c.restart_count, p.pod_id from container c
+      join pod p on c.pod_db_id = p.db_id where c.pod_db_id in `;
+      query += podIdList;
+      console.log(query);
+
+      res = await db.query(query, {}, false);
+      console.log(res);
+
+      res.forEach((con) => {
+        podCache.pods[con.POD_ID][con.CONTAINER_NAME] = {
+          id: con.DB_ID,
+          restart_count: con.RESTART_COUNT,
+        };
+      });
+
+      console.log('POD_CACHE: ', JSON.stringify(podCache, null, 2));
+      file(podCache, 'ids');
+
+      //const pods = (await k8sApi.listNamespacedPod(namespace)).body.items;
     };
 
-    return () => {
-      console.log('NAMESPACE: ', namespace);
-      const list = cache.list(namespace);
+    await getRelevantIds();
 
-      if (list) {
-        // console.log('WATCH LIST: ', JSON.stringify(list, null, 2));
-      }
+    return (stop = false) => {
+      console.log('NAMESPACE: ', namespace);
+
       cache.on(k8s.CHANGE, (pod) => {
         //if (pod.kind === u) return;
 
         //console.log('CHANGE HAPPENED: ', JSON.stringify(pod, null, 2));
+        if (podCache.pods[pod.metadata.name]) {
+          const pod_name = pod.metadata.name;
+
+          console.log('WE CAUGHT ONE');
+          file(pod, 'pod');
+
+          pod.status.containerStatuses.forEach((container) => {
+            const container_name = container.name;
+            const restart_count = container.restartCount;
+
+            if (
+              podCache.pods[pod_name][container_name].restart_count <
+              restart_count
+            ) {
+              const count =
+                podCache.pods[pod_name][container_name].restart_count;
+              podCache.pods[pod_name][container_name].restart_count += 1;
+              const state = container.state;
+              const date = state.running
+                ? Date.parse(state.running.startedAt)
+                : state.terminated
+                ? Date.parse(state.terminated.startedAt)
+                : Date.now();
+
+              console.log(
+                'TIME TO UPDATE: POD: ' +
+                  pod_name +
+                  ' \nCONTAINER: ' +
+                  container_name +
+                  ' RES: ' +
+                  restart_count +
+                  ' vs ' +
+                  count +
+                  '\n\n'
+              );
+
+              let query = `
+              Insert into restart_log (container_db_id, log_time) values (:con, :time)
+              `;
+
+              let binds = {
+                con: podCache.pods[pod_name][container_name].id,
+                time: date,
+              };
+
+              db.query(query, binds, false).then((result) => {
+                console.log('UPDATED: ');
+              });
+
+              query = `
+                Update container set restart_count = :count where db_id = :con_id
+                `;
+
+              binds = {
+                count: podCache.pods[pod_name][container_name].restart_count,
+                con_id: podCache.pods[pod_name][container_name].id,
+              };
+
+              db.query(query, binds, false).then((result) => {
+                console.log('RESTART_LOG_UPDATE');
+              });
+            }
+          });
+        }
+        return;
         console.log('NAME: ', JSON.stringify(pod.metadata.name, null, 2));
         console.log('KIND: ', JSON.stringify(pod.kind, null, 2));
         console.log(
           'CONTAINER_STATUSES: ',
           JSON.stringify(pod.status.containerStatuses, null, 2)
         );
-        file(pod);
 
         pod.metadata.managedFields.forEach((field) => {
           console.log('FIELD: ');
@@ -75,14 +189,16 @@ updateTestController.testUpdate = (req, res, next) => {
           console.log('   TIME: ', JSON.stringify(field.time, null, 2));
         });
       });
-    };
 
-    try {
-      const updateFunction = createUpdateFunction('test', 'default');
-      updateFunction();
-    } catch (err) {
-      console.log(err);
-    }
+      stop ? cache.stop() : cache.start();
+    };
+  }
+  try {
+    createUpdateFunction('test', 'default').then((updateFunciton) => {
+      updateFunciton();
+    });
+  } catch (err) {
+    console.log(err);
   }
 };
 
