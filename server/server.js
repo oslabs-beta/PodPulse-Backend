@@ -74,7 +74,7 @@ app.get('/logout', (req, res) => {
 });
 
 app.get(
-  '/getNamespaceState/:namespace/:userName',
+  '/getNamespaceState/:namespace/',
   authcontroller.verify,
   dbController.getNamespaceState,
   (req, res) => {
