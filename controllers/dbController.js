@@ -142,7 +142,6 @@ dbController.initializeNamespace = async (req, res, next) => {
             username: userName,
             container_name: container.name,
             container_restart_count: container.restartCount,
-            container_restart_count: container.restartCount,
             log_time: Date.parse(
               container.state.waiting
                 ? 0
