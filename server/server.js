@@ -47,7 +47,7 @@ app.get(
 );
 
 app.get(
-  '/startUpdate/:namespace',
+  '/startUpdate/:namespace/:userName',
   updateFuncController.createUpdateFunc,
   (req, res) => {
     return res.status(200).json(res.locals.result);
