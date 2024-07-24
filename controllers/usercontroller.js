@@ -1,6 +1,6 @@
-const db = require('../db');
+const db = require('../server/db.js');
 const oracledb = require('oracledb');
-const { query } = require('../db.js');
+const { query } = require('../server/db.js');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
