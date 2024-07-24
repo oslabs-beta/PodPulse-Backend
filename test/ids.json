@@ -1,0 +1,38 @@
+{
+  "test": 2,
+  "default": 9,
+  "pods": {
+    "mongodb-d8dbf989b-brnkx": {
+      "id": 21,
+      "mongodb": {
+        "id": 37,
+        "restart_count": 5
+      }
+    },
+    "mongo-express-69965478cb-m2jmc": {
+      "id": 20,
+      "mongo-express": {
+        "id": 36,
+        "restart_count": 3
+      }
+    },
+    "ecs-test-5874c78798-q6k76": {
+      "id": 19,
+      "ecs-test": {
+        "id": 35,
+        "restart_count": 7
+      }
+    },
+    "ecs-test-and-mongodb-78fb6b45c4-mpbpf": {
+      "id": 22,
+      "mongodb-evil": {
+        "id": 39,
+        "restart_count": 7
+      },
+      "ecs-test": {
+        "id": 38,
+        "restart_count": 4
+      }
+    }
+  }
+}
