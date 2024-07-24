@@ -106,8 +106,6 @@ dbController.initializeNamespace = async (req, res, next) => {
 
   console.log(userName + ' ' + namespace);
 
-  
-
   const query = `
     BEGIN
       ADD_NAMESPACE(:name, :user);
@@ -118,55 +116,56 @@ dbController.initializeNamespace = async (req, res, next) => {
     name: namespace, //would take from user input field, defaults to 'default'
     user: userName, //comes from cookie
   };
-
-  db.query(query, binds, true)
-    .then((result) => {
-      console.log('NAMESPACE RESULT: ', result);
-      k8sApi.listNamespacedPod(namespace).then((result) => {
+  db.query(query, binds, true).then((result) => {
+    console.log('NAMESPACE RESULT: ', result);
+    k8sApi
+      .listNamespacedPod(namespace)
+      .then((result) => {
         const pods = result.body.items;
-        pods.forEach((pod) => {
-          const container = pod.status.containerStatuses[0];
-          // console.log('CONTAINER: ', container);
+        const promiseArray = [];
 
+        pods.forEach((pod) => {
           const pod_name_split = pod.metadata.name.split('-');
           let pod_name = '';
           for (let i = 0; i < pod_name_split.length - 2; i++)
             pod_name += pod_name_split[i];
 
-          const podQuery = `
-            BEGIN
-              INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name);
-            END;
-            `;
-          const podBinds = {
-            namespace_name: namespace,
-            username: userName,
-            container_name: container.name,
-            container_restart_count: container.restartCount,
-            log_time: Date.parse(
-              container.state.waiting
-                ? 0
-                : container.state.running
-                ? container.state.running.startedAt //should probably use terminatedAt
-                : container.state.terminated.finishedAt
-            ),
-            pod_id_name: pod.metadata.name,
-            pod_name: pod_name,
-          };
-          console.log('pod binds,', podBinds)
+          pod.status.containerStatuses.forEach((container) => {
+            const podQuery = `
+    BEGIN
+      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name);
+    END;
+    `;
+            const podBinds = {
+              namespace_name: namespace,
+              username: userName,
+              container_name: container.name,
+              container_restart_count: container.restartCount,
+              log_time: Date.parse(
+                container.state.waiting
+                  ? 0
+                  : container.state.running
+                  ? container.state.running.startedAt //should probably use terminatedAt
+                  : container.state.terminated.finishedAt
+              ),
+              pod_id_name: pod.metadata.name,
+              pod_name: pod_name,
+            };
 
-          db.query(podQuery, podBinds, true).then((result) => {
-            console.log('INIT RESULT: ', result);
-          }); //probably add to res.locals here
+            promiseArray.push(db.query(podQuery, podBinds, true));
+          });
         });
+
+        Promise.all(promiseArray).then((results) => {
+          console.log(JSON.stringify(results, null, 2));
+          return next();
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .then(() => {
-      return next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  });
+  // console.log('CONTAINER: ', container);
 };
 
 module.exports = dbController;

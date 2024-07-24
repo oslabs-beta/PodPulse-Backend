@@ -14,6 +14,7 @@ const k8scontroller = require('../controllers/k8scontroller'); //temporarily out
 const dbController = require('../controllers/dbController');
 const usercontroller = require('../controllers/usercontroller');
 const { addOrUpdateObject } = require('@kubernetes/client-node');
+const updateFuncController = require('../controllers/updateFuncController');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -39,6 +40,15 @@ app.get(
   dbController.checkNamespaceExists,
   dbController.checkNamespaceNotInDB,
   dbController.initializeNamespace,
+  updateFuncController.createUpdateFunc,
+  (req, res) => {
+    return res.status(200).json(res.locals.result);
+  }
+);
+
+app.get(
+  '/startUpdate/:namespace',
+  updateFuncController.createUpdateFunc,
   (req, res) => {
     return res.status(200).json(res.locals.result);
   }
@@ -59,12 +69,12 @@ app.get('/auth', authcontroller.verify, (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-  console.log('logging out', req.cookies)
-  return res.status(200).clearCookie('secretCookie').send('cookies cleared')
-})
+  console.log('logging out', req.cookies);
+  return res.status(200).clearCookie('secretCookie').send('cookies cleared');
+});
 
 app.get(
-  '/getNamespaceState/:namespace/',
+  '/getNamespaceState/:namespace/:userName',
   authcontroller.verify,
   dbController.getNamespaceState,
   (req, res) => {
