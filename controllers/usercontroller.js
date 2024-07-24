@@ -32,7 +32,7 @@ userController.createUser = async (req, res, next) => {
   // console.log('goin to the database!')
 
   // const sql =  `INSERT INTO USER_TABLE (USERNAME, PASSWORD) VALUES (doh, greg)`
-  const useris = await query(
+  const useris = await db.query(
     `INSERT INTO USER_TABLE (USERNAME, PASSWORD) VALUES ('${userName}', '${res.locals.pw}')`
   );
   // console.log('the user is,', useris)
@@ -44,11 +44,12 @@ userController.createUser = async (req, res, next) => {
 userController.login = async (req, res, next) => {
   try {
     const { userName, password } = req.body;
-    // console.log('username is: ', userName)
-    const passwordQuery = await query(
+    console.log('username is: ', userName);
+    const passwordQuery = await db.query(
       `SELECT password FROM USER_TABLE WHERE USERNAME = '${userName}'`
     );
     // console.log('password is', passwordQuery, 'submitted pw is: ', password)
+    console.log('pw query:', passwordQuery);
     const hashedWord = passwordQuery[0].PASSWORD;
     const queryResult = await bcrypt.compare(password, hashedWord);
 
@@ -74,6 +75,11 @@ userController.login = async (req, res, next) => {
           message: { err: 'big login error' },
         });
       }
+    } else {
+      return next({
+        log: 'wrong user or password',
+        message: { err: 'wrong user/password'}
+      })
     }
 
     // console.log(queryResult)

@@ -1,40 +1,46 @@
+const jwt = require('jsonwebtoken');
+const db = require('../db');
 
-const jwt = require("jsonwebtoken");
+authcontroller = {};
 
-authcontroller = {}
-
-authcontroller.verify = (req, res, next) => {
-    const { token } = req.cookies.secretCookie; //req.cookies = {cookie: options: { } , cookie:' '}
-    console.log(token)
-    try{
-        if (token){
-        console.log('token exists')
-      const decoded =  jwt.verify(token, process.env.JWT_SECRET);
+authcontroller.verify = async (req, res, next) => {
+  if(!req.cookies.secretCookie){
+    res.locals.verification = {
+      login: false,
+      data: 'error',
+    };
+    console.log(res.locals.verification, 'is')
+    return next();
+  }
+  const { token } = req.cookies.secretCookie; //req.cookies = {cookie: options: { } , cookie:' '}
+  const userName = req.cookies.secretCookie.data.userName
+  const userQuery = await db.query(
+    `SELECT username from USER_TABLE WHERE USERNAME = '${userName}'`
+  )
+  try {
+    if (token) {
+      console.log('token exists');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       res.locals.verification = {
         login: true,
         data: decoded,
-      }
-      console.log('decoded')
+        userQuery: userQuery,
+      };
+      console.log('decoded');
+      
       return next();
     } else {
-      console.log('no token')
-      res.locals.verification ={
+      console.log('no token, invalid user');
+      res.locals.verification = {
         login: false,
-        data: 'error'
-      }
+        data: 'error',
+      };
 
-      return res.status(406).json({message: 'invalid credentials'}) 
-    } 
-    } catch (err) {
-        return next({
-            log: err,
-            message: {err: 'big error in jwt verification'}
-        })
+      return res.status(406).json({ message: 'invalid credentials' });
     }
- 
-}
+  } catch (err) {
+    return res.redirect('/login')
+  }
+};
 
-
-module.exports = authcontroller
-
-
+module.exports = authcontroller;

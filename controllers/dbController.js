@@ -21,7 +21,8 @@ dbController.getNamespaceList = async (req, res, next) => {
 };
 
 dbController.getNamespaceState = async (req, res, next) => {
-  let { username, namespace } = req.params;
+  let { namespace } = req.params;
+  const userName = req.cookies.secretCookie.data.userName;
   // username = 'test';
   // namespace = 'default';
 
@@ -38,7 +39,7 @@ where ns.namespace_name = '${namespace}' and ns.user_db_id = (Select u.db_id fro
     return db.query(namespaceQuery);
   }
 
-  retrieveNamespace(username, namespace)
+  retrieveNamespace(userName, namespace)
     .then((results) => {
       console.log(results);
       const resultObj = JSON.parse(Object.values(results[0])[0]);
@@ -81,7 +82,7 @@ dbController.checkNamespaceNotInDB = async (req, res, next) => {
   const { namespace } = req.params;
   const namespaceInDBQuery = `SELECT db_id FROM NAMESPACE where user_db_id = (SELECT db_id from USER_TABLE where username = :username) and namespace_name = :namespace`;
   const binds = {
-    username: 'jeremiah', //req.cookies.secretCookie.data.userName,
+    username: req.cookies.secretCookie.data.userName,
     namespace: namespace,
   };
 
@@ -132,10 +133,10 @@ dbController.initializeNamespace = async (req, res, next) => {
             pod_name += pod_name_split[i];
 
           const podQuery = `
-    BEGIN
-      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name, :pod_var, :name_var, :con_var);
-    END;
-    `;
+            BEGIN
+              INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name);
+            END;
+            `;
           const podBinds = {
             namespace_name: namespace,
             username: userName,
@@ -151,9 +152,6 @@ dbController.initializeNamespace = async (req, res, next) => {
             ),
             pod_id_name: pod.metadata.name,
             pod_name: pod_name,
-            pod_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
-            name_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
-            con_var: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
           };
 
           db.query(podQuery, podBinds, true).then((result) => {

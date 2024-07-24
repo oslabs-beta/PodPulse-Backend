@@ -20,15 +20,25 @@ app.use(express.urlencoded());
 app.use(cors());
 app.use(cookieParser());
 
+app.get('/getNamespaceList', authcontroller.verify, dbController.getNamespaceList, (req, res) => {
+  return res.status(200).json(res.locals.namespaceList);
+});
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
 
   return res.status(200).json(res.locals.result);
 });
 
-// app.get('/Nodes', authcontroller.verify, (req, res) => {
-//   return res.status(200)
-// })
+app.get(
+  '/initializeNamespace/:namespace',
+  authcontroller.verify,
+  dbController.checkNamespaceExists,
+  dbController.checkNamespaceNotInDB,
+  dbController.initializeNamespace,
+  (req, res) => {
+    return res.status(200).json(res.locals.result);
+  }
+);
 
 app.get(
   '/initializeNamespace/:username/:namespace',
@@ -44,8 +54,8 @@ app.get('/auth', authcontroller.verify, (req, res) => {
 });
 
 app.get(
-  '/getNamespaceState/:username/:namespace/',
-  dbController.getNamespaceState,
+  '/getNamespaceState/:namespace/',
+  authcontroller.verify, dbController.getNamespaceState,
   (req, res) => {
     return res.status(200).json(res.locals.namespaceData);
   }
@@ -58,7 +68,10 @@ app.post('/createUser', usercontroller.hashing, usercontroller.createUser, (req,
 app.post('/', usercontroller.login, (req, res) => {
   return res
     .status(200)
-    .cookie('secretCookie', res.locals.jwt, { maxAge: 60* 1000})
+    .cookie('secretCookie', res.locals.jwt, {
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+    })
     .json(res.locals.jwt);
 });
 
