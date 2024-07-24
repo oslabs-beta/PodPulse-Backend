@@ -36,9 +36,9 @@ app.get('/getPods', k8scontroller.getPods, (req, res) => {
 
 app.get(
   '/initializeNamespace/:namespace',
-  authcontroller.verify,
-  dbController.checkNamespaceExists,
-  dbController.checkNamespaceNotInDB,
+  // authcontroller.verify,
+  // dbController.checkNamespaceExists,
+  // dbController.checkNamespaceNotInDB,
   dbController.initializeNamespace,
   (req, res) => {
     return res.status(200).json(res.locals.result);

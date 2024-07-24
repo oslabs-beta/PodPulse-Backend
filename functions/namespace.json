@@ -1,1477 +1,456 @@
-[
-  {
-    "metadata": {
-      "annotations": {
-        "kompose.cmd": "C:\\WINDOWS\\system32\\kompose.exe convert -f docker-compose.yaml",
-        "kompose.version": "1.34.0 (cbf2835db)"
-      },
-      "creationTimestamp": "2024-07-20T15:34:34.000Z",
-      "generateName": "ecs-test-5874c78798-",
-      "labels": {
-        "io.kompose.service": "ecs-test",
-        "pod-template-hash": "5874c78798"
-      },
-      "managedFields": [
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:metadata": {
-              "f:annotations": {
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "ecs-test-and-mongodb-78fb6b45c4-mpbpf",
+    "generateName": "ecs-test-and-mongodb-78fb6b45c4-",
+    "namespace": "default",
+    "uid": "b686064e-ff34-431b-b7bf-ed79798cf02a",
+    "resourceVersion": "797952",
+    "creationTimestamp": "2024-07-20T16:02:04Z",
+    "labels": {
+      "io.kompose.service": "ecs-test-and-mongodb",
+      "pod-template-hash": "78fb6b45c4"
+    },
+    "annotations": {
+      "kompose.cmd": "C:\\WINDOWS\\system32\\kompose.exe convert -f docker-compose.yaml",
+      "kompose.version": "1.34.0 (cbf2835db)"
+    },
+    "ownerReferences": [
+      {
+        "apiVersion": "apps/v1",
+        "kind": "ReplicaSet",
+        "name": "ecs-test-and-mongodb-78fb6b45c4",
+        "uid": "fd60955d-9c0c-4dbf-a09a-b9a3f3c12257",
+        "controller": true,
+        "blockOwnerDeletion": true
+      }
+    ],
+    "managedFields": [
+      {
+        "manager": "kube-controller-manager",
+        "operation": "Update",
+        "apiVersion": "v1",
+        "time": "2024-07-20T16:02:04Z",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {
+          "f:metadata": {
+            "f:annotations": {
+              ".": {},
+              "f:kompose.cmd": {},
+              "f:kompose.version": {}
+            },
+            "f:generateName": {},
+            "f:labels": {
+              ".": {},
+              "f:io.kompose.service": {},
+              "f:pod-template-hash": {}
+            },
+            "f:ownerReferences": {
+              ".": {},
+              "k:{\"uid\":\"fd60955d-9c0c-4dbf-a09a-b9a3f3c12257\"}": {}
+            }
+          },
+          "f:spec": {
+            "f:containers": {
+              "k:{\"name\":\"ecs-test\"}": {
                 ".": {},
-                "f:kompose.cmd": {},
-                "f:kompose.version": {}
+                "f:env": {
+                  ".": {},
+                  "k:{\"name\":\"MONGO_DB_PWD\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"MONGO_DB_USERNAME\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  }
+                },
+                "f:image": {},
+                "f:imagePullPolicy": {},
+                "f:name": {},
+                "f:ports": {
+                  ".": {},
+                  "k:{\"containerPort\":3000,\"protocol\":\"TCP\"}": {
+                    ".": {},
+                    "f:containerPort": {},
+                    "f:protocol": {}
+                  }
+                },
+                "f:resources": {},
+                "f:terminationMessagePath": {},
+                "f:terminationMessagePolicy": {}
               },
-              "f:generateName": {},
-              "f:labels": {
+              "k:{\"name\":\"mongodb-evil\"}": {
                 ".": {},
-                "f:io.kompose.service": {},
-                "f:pod-template-hash": {}
-              },
-              "f:ownerReferences": {
-                ".": {},
-                "k:{\"uid\":\"9c5b1552-2ff7-443c-b2db-00f5c3f13ff2\"}": {}
+                "f:env": {
+                  ".": {},
+                  "k:{\"name\":\"MONGO_INITDB_ROOT_PASSWORD\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"MONGO_INITDB_ROOT_USERNAME\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  }
+                },
+                "f:image": {},
+                "f:imagePullPolicy": {},
+                "f:name": {},
+                "f:ports": {
+                  ".": {},
+                  "k:{\"containerPort\":27666,\"protocol\":\"TCP\"}": {
+                    ".": {},
+                    "f:containerPort": {},
+                    "f:protocol": {}
+                  }
+                },
+                "f:resources": {},
+                "f:terminationMessagePath": {},
+                "f:terminationMessagePolicy": {},
+                "f:volumeMounts": {
+                  ".": {},
+                  "k:{\"mountPath\":\"/data/db\"}": {
+                    ".": {},
+                    "f:mountPath": {},
+                    "f:name": {}
+                  }
+                }
               }
             },
-            "f:spec": {
-              "f:containers": {
-                "k:{\"name\":\"ecs-test\"}": {
-                  ".": {},
-                  "f:env": {
-                    ".": {},
-                    "k:{\"name\":\"MONGO_DB_PWD\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    },
-                    "k:{\"name\":\"MONGO_DB_USERNAME\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    }
-                  },
-                  "f:image": {},
-                  "f:imagePullPolicy": {},
-                  "f:name": {},
-                  "f:ports": {
-                    ".": {},
-                    "k:{\"containerPort\":3000,\"protocol\":\"TCP\"}": {
-                      ".": {},
-                      "f:containerPort": {},
-                      "f:protocol": {}
-                    }
-                  },
-                  "f:resources": {},
-                  "f:terminationMessagePath": {},
-                  "f:terminationMessagePolicy": {}
-                }
-              },
-              "f:dnsPolicy": {},
-              "f:enableServiceLinks": {},
-              "f:restartPolicy": {},
-              "f:schedulerName": {},
-              "f:securityContext": {},
-              "f:terminationGracePeriodSeconds": {}
-            }
-          },
-          "manager": "kube-controller-manager",
-          "operation": "Update",
-          "time": "2024-07-20T15:34:34.000Z"
-        },
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:status": {
-              "f:conditions": {
-                "k:{\"type\":\"ContainersReady\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"Initialized\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"PodReadyToStartContainers\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"Ready\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                }
-              },
-              "f:containerStatuses": {},
-              "f:hostIP": {},
-              "f:hostIPs": {},
-              "f:phase": {},
-              "f:podIP": {},
-              "f:podIPs": {
+            "f:dnsPolicy": {},
+            "f:enableServiceLinks": {},
+            "f:restartPolicy": {},
+            "f:schedulerName": {},
+            "f:securityContext": {},
+            "f:terminationGracePeriodSeconds": {},
+            "f:volumes": {
+              ".": {},
+              "k:{\"name\":\"mongo-data-evil\"}": {
                 ".": {},
-                "k:{\"ip\":\"10.1.0.200\"}": {
+                "f:name": {},
+                "f:persistentVolumeClaim": {
                   ".": {},
-                  "f:ip": {}
-                }
-              },
-              "f:startTime": {}
-            }
-          },
-          "manager": "kubelet",
-          "operation": "Update",
-          "subresource": "status",
-          "time": "2024-07-23T07:36:27.000Z"
-        }
-      ],
-      "name": "ecs-test-5874c78798-q6k76",
-      "namespace": "default",
-      "ownerReferences": [
-        {
-          "apiVersion": "apps/v1",
-          "blockOwnerDeletion": true,
-          "controller": true,
-          "kind": "ReplicaSet",
-          "name": "ecs-test-5874c78798",
-          "uid": "9c5b1552-2ff7-443c-b2db-00f5c3f13ff2"
-        }
-      ],
-      "resourceVersion": "679584",
-      "uid": "efd44144-f0ae-4c4d-9f91-635c50483c61"
-    },
-    "spec": {
-      "containers": [
-        {
-          "env": [
-            {
-              "name": "MONGO_DB_PWD",
-              "value": "pass"
-            },
-            {
-              "name": "MONGO_DB_USERNAME",
-              "value": "admin"
-            }
-          ],
-          "image": "onlytenpercent/ecs-test:1.0",
-          "imagePullPolicy": "IfNotPresent",
-          "name": "ecs-test",
-          "ports": [
-            {
-              "containerPort": 3000,
-              "protocol": "TCP"
-            }
-          ],
-          "resources": {},
-          "terminationMessagePath": "/dev/termination-log",
-          "terminationMessagePolicy": "File",
-          "volumeMounts": [
-            {
-              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
-              "name": "kube-api-access-8q9cq",
-              "readOnly": true
-            }
-          ]
-        }
-      ],
-      "dnsPolicy": "ClusterFirst",
-      "enableServiceLinks": true,
-      "nodeName": "docker-desktop",
-      "preemptionPolicy": "PreemptLowerPriority",
-      "priority": 0,
-      "restartPolicy": "Always",
-      "schedulerName": "default-scheduler",
-      "securityContext": {},
-      "serviceAccount": "default",
-      "serviceAccountName": "default",
-      "terminationGracePeriodSeconds": 30,
-      "tolerations": [
-        {
-          "effect": "NoExecute",
-          "key": "node.kubernetes.io/not-ready",
-          "operator": "Exists",
-          "tolerationSeconds": 300
-        },
-        {
-          "effect": "NoExecute",
-          "key": "node.kubernetes.io/unreachable",
-          "operator": "Exists",
-          "tolerationSeconds": 300
-        }
-      ],
-      "volumes": [
-        {
-          "name": "kube-api-access-8q9cq",
-          "projected": {
-            "defaultMode": 420,
-            "sources": [
-              {
-                "serviceAccountToken": {
-                  "expirationSeconds": 3607,
-                  "path": "token"
-                }
-              },
-              {
-                "configMap": {
-                  "items": [
-                    {
-                      "key": "ca.crt",
-                      "path": "ca.crt"
-                    }
-                  ],
-                  "name": "kube-root-ca.crt"
-                }
-              },
-              {
-                "downwardAPI": {
-                  "items": [
-                    {
-                      "fieldRef": {
-                        "apiVersion": "v1",
-                        "fieldPath": "metadata.namespace"
-                      },
-                      "path": "namespace"
-                    }
-                  ]
+                  "f:claimName": {}
                 }
               }
-            ]
-          }
-        }
-      ]
-    },
-    "status": {
-      "conditions": [
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:48.000Z",
-          "status": "True",
-          "type": "PodReadyToStartContainers"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-20T15:34:35.000Z",
-          "status": "True",
-          "type": "Initialized"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-23T07:36:27.000Z",
-          "status": "True",
-          "type": "Ready"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-23T07:36:27.000Z",
-          "status": "True",
-          "type": "ContainersReady"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-20T15:34:35.000Z",
-          "status": "True",
-          "type": "PodScheduled"
-        }
-      ],
-      "containerStatuses": [
-        {
-          "containerID": "docker://ed4226f4da33cea1eabbfe9859280184287e930ff7a29ed8bbc2ee9daa99f0c3",
-          "image": "onlytenpercent/ecs-test:1.0",
-          "imageID": "docker-pullable://onlytenpercent/ecs-test@sha256:afb9719583042454c8cd68b0d2c38231e1c37f74660cc2fe23ee2643eb09d2a5",
-          "lastState": {
-            "terminated": {
-              "containerID": "docker://2af52ffcc4c601d4523a3e87f10899e9d3a375fad1966c8028bd137588a3ba62",
-              "exitCode": 137,
-              "finishedAt": "2024-07-23T07:36:01.000Z",
-              "reason": "Error",
-              "startedAt": "2024-07-23T07:35:32.000Z"
-            }
-          },
-          "name": "ecs-test",
-          "ready": true,
-          "restartCount": 5,
-          "started": true,
-          "state": {
-            "running": {
-              "startedAt": "2024-07-23T07:36:26.000Z"
             }
           }
         }
-      ],
-      "hostIP": "192.168.65.3",
-      "hostIPs": [
-        {
-          "ip": "192.168.65.3"
-        }
-      ],
-      "phase": "Running",
-      "podIP": "10.1.0.200",
-      "podIPs": [
-        {
-          "ip": "10.1.0.200"
-        }
-      ],
-      "qosClass": "BestEffort",
-      "startTime": "2024-07-20T15:34:35.000Z"
-    }
+      },
+      {
+        "manager": "kube-scheduler",
+        "operation": "Update",
+        "apiVersion": "v1",
+        "time": "2024-07-20T16:02:04Z",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {
+          "f:status": {
+            "f:conditions": {
+              ".": {},
+              "k:{\"type\":\"PodScheduled\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:message": {},
+                "f:reason": {},
+                "f:status": {},
+                "f:type": {}
+              }
+            }
+          }
+        },
+        "subresource": "status"
+      },
+      {
+        "manager": "kubelet",
+        "operation": "Update",
+        "apiVersion": "v1",
+        "time": "2024-07-24T08:22:12Z",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {
+          "f:status": {
+            "f:conditions": {
+              "k:{\"type\":\"ContainersReady\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:status": {},
+                "f:type": {}
+              },
+              "k:{\"type\":\"Initialized\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:status": {},
+                "f:type": {}
+              },
+              "k:{\"type\":\"PodReadyToStartContainers\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:status": {},
+                "f:type": {}
+              },
+              "k:{\"type\":\"Ready\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:status": {},
+                "f:type": {}
+              }
+            },
+            "f:containerStatuses": {},
+            "f:hostIP": {},
+            "f:hostIPs": {},
+            "f:phase": {},
+            "f:podIP": {},
+            "f:podIPs": {
+              ".": {},
+              "k:{\"ip\":\"10.1.0.205\"}": {
+                ".": {},
+                "f:ip": {}
+              }
+            },
+            "f:startTime": {}
+          }
+        },
+        "subresource": "status"
+      }
+    ]
   },
-  {
-    "metadata": {
-      "annotations": {
-        "kompose.cmd": "C:\\WINDOWS\\system32\\kompose.exe convert -f docker-compose.yaml",
-        "kompose.version": "1.34.0 (cbf2835db)"
+  "spec": {
+    "volumes": [
+      {
+        "name": "mongo-data-evil",
+        "persistentVolumeClaim": {
+          "claimName": "mongo-data-evil"
+        }
       },
-      "creationTimestamp": "2024-07-20T16:02:04.000Z",
-      "generateName": "ecs-test-and-mongodb-78fb6b45c4-",
-      "labels": {
-        "io.kompose.service": "ecs-test-and-mongodb",
-        "pod-template-hash": "78fb6b45c4"
-      },
-      "managedFields": [
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:metadata": {
-              "f:annotations": {
-                ".": {},
-                "f:kompose.cmd": {},
-                "f:kompose.version": {}
-              },
-              "f:generateName": {},
-              "f:labels": {
-                ".": {},
-                "f:io.kompose.service": {},
-                "f:pod-template-hash": {}
-              },
-              "f:ownerReferences": {
-                ".": {},
-                "k:{\"uid\":\"fd60955d-9c0c-4dbf-a09a-b9a3f3c12257\"}": {}
+      {
+        "name": "kube-api-access-scv9v",
+        "projected": {
+          "sources": [
+            {
+              "serviceAccountToken": {
+                "expirationSeconds": 3607,
+                "path": "token"
               }
             },
-            "f:spec": {
-              "f:containers": {
-                "k:{\"name\":\"ecs-test\"}": {
-                  ".": {},
-                  "f:env": {
-                    ".": {},
-                    "k:{\"name\":\"MONGO_DB_PWD\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    },
-                    "k:{\"name\":\"MONGO_DB_USERNAME\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    }
-                  },
-                  "f:image": {},
-                  "f:imagePullPolicy": {},
-                  "f:name": {},
-                  "f:ports": {
-                    ".": {},
-                    "k:{\"containerPort\":3000,\"protocol\":\"TCP\"}": {
-                      ".": {},
-                      "f:containerPort": {},
-                      "f:protocol": {}
-                    }
-                  },
-                  "f:resources": {},
-                  "f:terminationMessagePath": {},
-                  "f:terminationMessagePolicy": {}
-                },
-                "k:{\"name\":\"mongodb-evil\"}": {
-                  ".": {},
-                  "f:env": {
-                    ".": {},
-                    "k:{\"name\":\"MONGO_INITDB_ROOT_PASSWORD\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    },
-                    "k:{\"name\":\"MONGO_INITDB_ROOT_USERNAME\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    }
-                  },
-                  "f:image": {},
-                  "f:imagePullPolicy": {},
-                  "f:name": {},
-                  "f:ports": {
-                    ".": {},
-                    "k:{\"containerPort\":27666,\"protocol\":\"TCP\"}": {
-                      ".": {},
-                      "f:containerPort": {},
-                      "f:protocol": {}
-                    }
-                  },
-                  "f:resources": {},
-                  "f:terminationMessagePath": {},
-                  "f:terminationMessagePolicy": {},
-                  "f:volumeMounts": {
-                    ".": {},
-                    "k:{\"mountPath\":\"/data/db\"}": {
-                      ".": {},
-                      "f:mountPath": {},
-                      "f:name": {}
+            {
+              "configMap": {
+                "name": "kube-root-ca.crt",
+                "items": [
+                  {
+                    "key": "ca.crt",
+                    "path": "ca.crt"
+                  }
+                ]
+              }
+            },
+            {
+              "downwardAPI": {
+                "items": [
+                  {
+                    "path": "namespace",
+                    "fieldRef": {
+                      "apiVersion": "v1",
+                      "fieldPath": "metadata.namespace"
                     }
                   }
-                }
-              },
-              "f:dnsPolicy": {},
-              "f:enableServiceLinks": {},
-              "f:restartPolicy": {},
-              "f:schedulerName": {},
-              "f:securityContext": {},
-              "f:terminationGracePeriodSeconds": {},
-              "f:volumes": {
-                ".": {},
-                "k:{\"name\":\"mongo-data-evil\"}": {
-                  ".": {},
-                  "f:name": {},
-                  "f:persistentVolumeClaim": {
-                    ".": {},
-                    "f:claimName": {}
-                  }
-                }
+                ]
               }
             }
-          },
-          "manager": "kube-controller-manager",
-          "operation": "Update",
-          "time": "2024-07-20T16:02:04.000Z"
-        },
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:status": {
-              "f:conditions": {
-                ".": {},
-                "k:{\"type\":\"PodScheduled\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:message": {},
-                  "f:reason": {},
-                  "f:status": {},
-                  "f:type": {}
-                }
-              }
-            }
-          },
-          "manager": "kube-scheduler",
-          "operation": "Update",
-          "subresource": "status",
-          "time": "2024-07-20T16:02:04.000Z"
-        },
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:status": {
-              "f:conditions": {
-                "k:{\"type\":\"ContainersReady\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"Initialized\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"PodReadyToStartContainers\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"Ready\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                }
-              },
-              "f:containerStatuses": {},
-              "f:hostIP": {},
-              "f:hostIPs": {},
-              "f:phase": {},
-              "f:podIP": {},
-              "f:podIPs": {
-                ".": {},
-                "k:{\"ip\":\"10.1.0.198\"}": {
-                  ".": {},
-                  "f:ip": {}
-                }
-              },
-              "f:startTime": {}
-            }
-          },
-          "manager": "kubelet",
-          "operation": "Update",
-          "subresource": "status",
-          "time": "2024-07-22T19:17:49.000Z"
-        }
-      ],
-      "name": "ecs-test-and-mongodb-78fb6b45c4-mpbpf",
-      "namespace": "default",
-      "ownerReferences": [
-        {
-          "apiVersion": "apps/v1",
-          "blockOwnerDeletion": true,
-          "controller": true,
-          "kind": "ReplicaSet",
-          "name": "ecs-test-and-mongodb-78fb6b45c4",
-          "uid": "fd60955d-9c0c-4dbf-a09a-b9a3f3c12257"
-        }
-      ],
-      "resourceVersion": "620564",
-      "uid": "b686064e-ff34-431b-b7bf-ed79798cf02a"
-    },
-    "spec": {
-      "containers": [
-        {
-          "env": [
-            {
-              "name": "MONGO_DB_PWD",
-              "value": "pass"
-            },
-            {
-              "name": "MONGO_DB_USERNAME",
-              "value": "admin"
-            }
           ],
-          "image": "onlytenpercent/ecs-test:1.0",
-          "imagePullPolicy": "IfNotPresent",
-          "name": "ecs-test",
-          "ports": [
-            {
-              "containerPort": 3000,
-              "protocol": "TCP"
-            }
-          ],
-          "resources": {},
-          "terminationMessagePath": "/dev/termination-log",
-          "terminationMessagePolicy": "File",
-          "volumeMounts": [
-            {
-              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
-              "name": "kube-api-access-scv9v",
-              "readOnly": true
-            }
-          ]
-        },
-        {
-          "env": [
-            {
-              "name": "MONGO_INITDB_ROOT_PASSWORD",
-              "value": "pass"
-            },
-            {
-              "name": "MONGO_INITDB_ROOT_USERNAME",
-              "value": "admin"
-            }
-          ],
-          "image": "mongo",
-          "imagePullPolicy": "Always",
-          "name": "mongodb-evil",
-          "ports": [
-            {
-              "containerPort": 27666,
-              "protocol": "TCP"
-            }
-          ],
-          "resources": {},
-          "terminationMessagePath": "/dev/termination-log",
-          "terminationMessagePolicy": "File",
-          "volumeMounts": [
-            {
-              "mountPath": "/data/db",
-              "name": "mongo-data-evil"
-            },
-            {
-              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
-              "name": "kube-api-access-scv9v",
-              "readOnly": true
-            }
-          ]
+          "defaultMode": 420
         }
-      ],
-      "dnsPolicy": "ClusterFirst",
-      "enableServiceLinks": true,
-      "nodeName": "docker-desktop",
-      "preemptionPolicy": "PreemptLowerPriority",
-      "priority": 0,
-      "restartPolicy": "Always",
-      "schedulerName": "default-scheduler",
-      "securityContext": {},
-      "serviceAccount": "default",
-      "serviceAccountName": "default",
-      "terminationGracePeriodSeconds": 30,
-      "tolerations": [
-        {
-          "effect": "NoExecute",
-          "key": "node.kubernetes.io/not-ready",
-          "operator": "Exists",
-          "tolerationSeconds": 300
-        },
-        {
-          "effect": "NoExecute",
-          "key": "node.kubernetes.io/unreachable",
-          "operator": "Exists",
-          "tolerationSeconds": 300
-        }
-      ],
-      "volumes": [
-        {
-          "name": "mongo-data-evil",
-          "persistentVolumeClaim": {
-            "claimName": "mongo-data-evil"
+      }
+    ],
+    "containers": [
+      {
+        "name": "ecs-test",
+        "image": "onlytenpercent/ecs-test:1.0",
+        "ports": [
+          {
+            "containerPort": 3000,
+            "protocol": "TCP"
           }
-        },
-        {
-          "name": "kube-api-access-scv9v",
-          "projected": {
-            "defaultMode": 420,
-            "sources": [
-              {
-                "serviceAccountToken": {
-                  "expirationSeconds": 3607,
-                  "path": "token"
-                }
-              },
-              {
-                "configMap": {
-                  "items": [
-                    {
-                      "key": "ca.crt",
-                      "path": "ca.crt"
-                    }
-                  ],
-                  "name": "kube-root-ca.crt"
-                }
-              },
-              {
-                "downwardAPI": {
-                  "items": [
-                    {
-                      "fieldRef": {
-                        "apiVersion": "v1",
-                        "fieldPath": "metadata.namespace"
-                      },
-                      "path": "namespace"
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "status": {
-      "conditions": [
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:49.000Z",
-          "status": "True",
-          "type": "PodReadyToStartContainers"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-20T16:02:05.000Z",
-          "status": "True",
-          "type": "Initialized"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:49.000Z",
-          "status": "True",
-          "type": "Ready"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:49.000Z",
-          "status": "True",
-          "type": "ContainersReady"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-20T16:02:05.000Z",
-          "status": "True",
-          "type": "PodScheduled"
-        }
-      ],
-      "containerStatuses": [
-        {
-          "containerID": "docker://deb790c96ea87b747694af698a29513f434c7c1a0283e041ab13ea4eb966c0c6",
-          "image": "onlytenpercent/ecs-test:1.0",
-          "imageID": "docker-pullable://onlytenpercent/ecs-test@sha256:afb9719583042454c8cd68b0d2c38231e1c37f74660cc2fe23ee2643eb09d2a5",
-          "lastState": {
-            "terminated": {
-              "containerID": "docker://85bb5498db172b5a235a79f41dc13e1fba14648d4573def6b7dcf9b638fd4c8f",
-              "exitCode": 255,
-              "finishedAt": "2024-07-22T19:17:39.000Z",
-              "reason": "Error",
-              "startedAt": "2024-07-22T15:31:22.000Z"
-            }
+        ],
+        "env": [
+          {
+            "name": "MONGO_DB_PWD",
+            "value": "pass"
           },
-          "name": "ecs-test",
-          "ready": true,
-          "restartCount": 2,
-          "started": true,
-          "state": {
-            "running": {
-              "startedAt": "2024-07-22T19:17:48.000Z"
-            }
+          {
+            "name": "MONGO_DB_USERNAME",
+            "value": "admin"
           }
-        },
-        {
-          "containerID": "docker://7f2da55ed5b4de3b2af5f4c1966f0c9829aa2bf92a18cf4bb3e279f7318b7c3f",
-          "image": "mongo:latest",
-          "imageID": "docker-pullable://mongo@sha256:1cd3951000020c1cb1757868e6cfd82667f57d80bb31fed8b585e26a8a1d960f",
-          "lastState": {
-            "terminated": {
-              "containerID": "docker://bde9ada5af4e58bba7062fc0c89f754884e596d7714bc75dd05632a8e1d951eb",
-              "exitCode": 255,
-              "finishedAt": "2024-07-22T19:17:39.000Z",
-              "reason": "Error",
-              "startedAt": "2024-07-22T15:31:23.000Z"
-            }
+        ],
+        "resources": {},
+        "volumeMounts": [
+          {
+            "name": "kube-api-access-scv9v",
+            "readOnly": true,
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+          }
+        ],
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File",
+        "imagePullPolicy": "IfNotPresent"
+      },
+      {
+        "name": "mongodb-evil",
+        "image": "mongo",
+        "ports": [
+          {
+            "containerPort": 27666,
+            "protocol": "TCP"
+          }
+        ],
+        "env": [
+          {
+            "name": "MONGO_INITDB_ROOT_PASSWORD",
+            "value": "pass"
           },
-          "name": "mongodb-evil",
-          "ready": true,
-          "restartCount": 2,
-          "started": true,
-          "state": {
-            "running": {
-              "startedAt": "2024-07-22T19:17:49.000Z"
-            }
+          {
+            "name": "MONGO_INITDB_ROOT_USERNAME",
+            "value": "admin"
           }
-        }
-      ],
-      "hostIP": "192.168.65.3",
-      "hostIPs": [
-        {
-          "ip": "192.168.65.3"
-        }
-      ],
-      "phase": "Running",
-      "podIP": "10.1.0.198",
-      "podIPs": [
-        {
-          "ip": "10.1.0.198"
-        }
-      ],
-      "qosClass": "BestEffort",
-      "startTime": "2024-07-20T16:02:05.000Z"
-    }
+        ],
+        "resources": {},
+        "volumeMounts": [
+          {
+            "name": "mongo-data-evil",
+            "mountPath": "/data/db"
+          },
+          {
+            "name": "kube-api-access-scv9v",
+            "readOnly": true,
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+          }
+        ],
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File",
+        "imagePullPolicy": "Always"
+      }
+    ],
+    "restartPolicy": "Always",
+    "terminationGracePeriodSeconds": 30,
+    "dnsPolicy": "ClusterFirst",
+    "serviceAccountName": "default",
+    "serviceAccount": "default",
+    "nodeName": "docker-desktop",
+    "securityContext": {},
+    "schedulerName": "default-scheduler",
+    "tolerations": [
+      {
+        "key": "node.kubernetes.io/not-ready",
+        "operator": "Exists",
+        "effect": "NoExecute",
+        "tolerationSeconds": 300
+      },
+      {
+        "key": "node.kubernetes.io/unreachable",
+        "operator": "Exists",
+        "effect": "NoExecute",
+        "tolerationSeconds": 300
+      }
+    ],
+    "priority": 0,
+    "enableServiceLinks": true,
+    "preemptionPolicy": "PreemptLowerPriority"
   },
-  {
-    "metadata": {
-      "annotations": {
-        "kompose.cmd": "C:\\WINDOWS\\system32\\kompose.exe convert -f docker-compose.yaml",
-        "kompose.version": "1.34.0 (cbf2835db)"
+  "status": {
+    "phase": "Running",
+    "conditions": [
+      {
+        "type": "PodReadyToStartContainers",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2024-07-24T07:45:02Z"
       },
-      "creationTimestamp": "2024-07-20T16:02:04.000Z",
-      "generateName": "mongo-express-69965478cb-",
-      "labels": {
-        "io.kompose.service": "mongo-express",
-        "pod-template-hash": "69965478cb"
+      {
+        "type": "Initialized",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2024-07-20T16:02:05Z"
       },
-      "managedFields": [
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:metadata": {
-              "f:annotations": {
-                ".": {},
-                "f:kompose.cmd": {},
-                "f:kompose.version": {}
-              },
-              "f:generateName": {},
-              "f:labels": {
-                ".": {},
-                "f:io.kompose.service": {},
-                "f:pod-template-hash": {}
-              },
-              "f:ownerReferences": {
-                ".": {},
-                "k:{\"uid\":\"eeb64f73-decc-43be-993c-efe3241f6a4a\"}": {}
-              }
-            },
-            "f:spec": {
-              "f:containers": {
-                "k:{\"name\":\"mongo-express\"}": {
-                  ".": {},
-                  "f:env": {
-                    ".": {},
-                    "k:{\"name\":\"ME_CONFIG_MONGODB_ADMINPASSWORD\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    },
-                    "k:{\"name\":\"ME_CONFIG_MONGODB_ADMINUSERNAME\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    },
-                    "k:{\"name\":\"ME_CONFIG_MONGODB_SERVER\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    }
-                  },
-                  "f:image": {},
-                  "f:imagePullPolicy": {},
-                  "f:name": {},
-                  "f:ports": {
-                    ".": {},
-                    "k:{\"containerPort\":8081,\"protocol\":\"TCP\"}": {
-                      ".": {},
-                      "f:containerPort": {},
-                      "f:protocol": {}
-                    }
-                  },
-                  "f:resources": {},
-                  "f:terminationMessagePath": {},
-                  "f:terminationMessagePolicy": {}
-                }
-              },
-              "f:dnsPolicy": {},
-              "f:enableServiceLinks": {},
-              "f:restartPolicy": {},
-              "f:schedulerName": {},
-              "f:securityContext": {},
-              "f:terminationGracePeriodSeconds": {}
-            }
-          },
-          "manager": "kube-controller-manager",
-          "operation": "Update",
-          "time": "2024-07-20T16:02:04.000Z"
-        },
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:status": {
-              "f:conditions": {
-                "k:{\"type\":\"ContainersReady\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"Initialized\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"PodReadyToStartContainers\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"Ready\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                }
-              },
-              "f:containerStatuses": {},
-              "f:hostIP": {},
-              "f:hostIPs": {},
-              "f:phase": {},
-              "f:podIP": {},
-              "f:podIPs": {
-                ".": {},
-                "k:{\"ip\":\"10.1.0.201\"}": {
-                  ".": {},
-                  "f:ip": {}
-                }
-              },
-              "f:startTime": {}
-            }
-          },
-          "manager": "kubelet",
-          "operation": "Update",
-          "subresource": "status",
-          "time": "2024-07-22T19:17:48.000Z"
-        }
-      ],
-      "name": "mongo-express-69965478cb-m2jmc",
-      "namespace": "default",
-      "ownerReferences": [
-        {
-          "apiVersion": "apps/v1",
-          "blockOwnerDeletion": true,
-          "controller": true,
-          "kind": "ReplicaSet",
-          "name": "mongo-express-69965478cb",
-          "uid": "eeb64f73-decc-43be-993c-efe3241f6a4a"
-        }
-      ],
-      "resourceVersion": "620557",
-      "uid": "67948cca-922d-4a33-afce-747ab936cf5f"
-    },
-    "spec": {
-      "containers": [
-        {
-          "env": [
-            {
-              "name": "ME_CONFIG_MONGODB_ADMINPASSWORD",
-              "value": "pass"
-            },
-            {
-              "name": "ME_CONFIG_MONGODB_ADMINUSERNAME",
-              "value": "admin"
-            },
-            {
-              "name": "ME_CONFIG_MONGODB_SERVER",
-              "value": "mongodb"
-            }
-          ],
-          "image": "onlytenpercent/mongo-express:1.0",
-          "imagePullPolicy": "IfNotPresent",
-          "name": "mongo-express",
-          "ports": [
-            {
-              "containerPort": 8081,
-              "protocol": "TCP"
-            }
-          ],
-          "resources": {},
-          "terminationMessagePath": "/dev/termination-log",
-          "terminationMessagePolicy": "File",
-          "volumeMounts": [
-            {
-              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
-              "name": "kube-api-access-gdtbb",
-              "readOnly": true
-            }
-          ]
-        }
-      ],
-      "dnsPolicy": "ClusterFirst",
-      "enableServiceLinks": true,
-      "nodeName": "docker-desktop",
-      "preemptionPolicy": "PreemptLowerPriority",
-      "priority": 0,
-      "restartPolicy": "Always",
-      "schedulerName": "default-scheduler",
-      "securityContext": {},
-      "serviceAccount": "default",
-      "serviceAccountName": "default",
-      "terminationGracePeriodSeconds": 30,
-      "tolerations": [
-        {
-          "effect": "NoExecute",
-          "key": "node.kubernetes.io/not-ready",
-          "operator": "Exists",
-          "tolerationSeconds": 300
-        },
-        {
-          "effect": "NoExecute",
-          "key": "node.kubernetes.io/unreachable",
-          "operator": "Exists",
-          "tolerationSeconds": 300
-        }
-      ],
-      "volumes": [
-        {
-          "name": "kube-api-access-gdtbb",
-          "projected": {
-            "defaultMode": 420,
-            "sources": [
-              {
-                "serviceAccountToken": {
-                  "expirationSeconds": 3607,
-                  "path": "token"
-                }
-              },
-              {
-                "configMap": {
-                  "items": [
-                    {
-                      "key": "ca.crt",
-                      "path": "ca.crt"
-                    }
-                  ],
-                  "name": "kube-root-ca.crt"
-                }
-              },
-              {
-                "downwardAPI": {
-                  "items": [
-                    {
-                      "fieldRef": {
-                        "apiVersion": "v1",
-                        "fieldPath": "metadata.namespace"
-                      },
-                      "path": "namespace"
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "status": {
-      "conditions": [
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:48.000Z",
-          "status": "True",
-          "type": "PodReadyToStartContainers"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-20T16:02:04.000Z",
-          "status": "True",
-          "type": "Initialized"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:48.000Z",
-          "status": "True",
-          "type": "Ready"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:48.000Z",
-          "status": "True",
-          "type": "ContainersReady"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-20T16:02:04.000Z",
-          "status": "True",
-          "type": "PodScheduled"
-        }
-      ],
-      "containerStatuses": [
-        {
-          "containerID": "docker://ece93aae5347b2c6e7f1876d9aba5ea8dce3b5134a1f91f8f204353bf50f01e9",
-          "image": "onlytenpercent/mongo-express:1.0",
-          "imageID": "docker-pullable://onlytenpercent/mongo-express@sha256:749f951cf74be04f8f8d87507391a73e8b6f733684fe2ee9652846433726770a",
-          "lastState": {
-            "terminated": {
-              "containerID": "docker://f2adf0d9799927161bb11661748032e9bec968e9ea5be1f65e462682c948ad8f",
-              "exitCode": 255,
-              "finishedAt": "2024-07-22T19:17:39.000Z",
-              "reason": "Error",
-              "startedAt": "2024-07-22T15:31:22.000Z"
-            }
-          },
-          "name": "mongo-express",
-          "ready": true,
-          "restartCount": 2,
-          "started": true,
-          "state": {
-            "running": {
-              "startedAt": "2024-07-22T19:17:48.000Z"
-            }
-          }
-        }
-      ],
-      "hostIP": "192.168.65.3",
-      "hostIPs": [
-        {
-          "ip": "192.168.65.3"
-        }
-      ],
-      "phase": "Running",
-      "podIP": "10.1.0.201",
-      "podIPs": [
-        {
-          "ip": "10.1.0.201"
-        }
-      ],
-      "qosClass": "BestEffort",
-      "startTime": "2024-07-20T16:02:04.000Z"
-    }
-  },
-  {
-    "metadata": {
-      "annotations": {
-        "kompose.cmd": "C:\\WINDOWS\\system32\\kompose.exe convert -f docker-compose.yaml",
-        "kompose.version": "1.34.0 (cbf2835db)"
+      {
+        "type": "Ready",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2024-07-24T08:22:12Z"
       },
-      "creationTimestamp": "2024-07-20T16:02:04.000Z",
-      "generateName": "mongodb-d8dbf989b-",
-      "labels": {
-        "io.kompose.service": "mongodb",
-        "pod-template-hash": "d8dbf989b"
+      {
+        "type": "ContainersReady",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2024-07-24T08:22:12Z"
       },
-      "managedFields": [
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:metadata": {
-              "f:annotations": {
-                ".": {},
-                "f:kompose.cmd": {},
-                "f:kompose.version": {}
-              },
-              "f:generateName": {},
-              "f:labels": {
-                ".": {},
-                "f:io.kompose.service": {},
-                "f:pod-template-hash": {}
-              },
-              "f:ownerReferences": {
-                ".": {},
-                "k:{\"uid\":\"a72be568-7bea-4b10-97ef-8260acc57fa6\"}": {}
-              }
-            },
-            "f:spec": {
-              "f:containers": {
-                "k:{\"name\":\"mongodb\"}": {
-                  ".": {},
-                  "f:env": {
-                    ".": {},
-                    "k:{\"name\":\"MONGO_INITDB_ROOT_PASSWORD\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    },
-                    "k:{\"name\":\"MONGO_INITDB_ROOT_USERNAME\"}": {
-                      ".": {},
-                      "f:name": {},
-                      "f:value": {}
-                    }
-                  },
-                  "f:image": {},
-                  "f:imagePullPolicy": {},
-                  "f:name": {},
-                  "f:ports": {
-                    ".": {},
-                    "k:{\"containerPort\":27017,\"protocol\":\"TCP\"}": {
-                      ".": {},
-                      "f:containerPort": {},
-                      "f:protocol": {}
-                    }
-                  },
-                  "f:resources": {},
-                  "f:terminationMessagePath": {},
-                  "f:terminationMessagePolicy": {},
-                  "f:volumeMounts": {
-                    ".": {},
-                    "k:{\"mountPath\":\"/data/db\"}": {
-                      ".": {},
-                      "f:mountPath": {},
-                      "f:name": {}
-                    }
-                  }
-                }
-              },
-              "f:dnsPolicy": {},
-              "f:enableServiceLinks": {},
-              "f:restartPolicy": {},
-              "f:schedulerName": {},
-              "f:securityContext": {},
-              "f:terminationGracePeriodSeconds": {},
-              "f:volumes": {
-                ".": {},
-                "k:{\"name\":\"mongo-data\"}": {
-                  ".": {},
-                  "f:name": {},
-                  "f:persistentVolumeClaim": {
-                    ".": {},
-                    "f:claimName": {}
-                  }
-                }
-              }
-            }
-          },
-          "manager": "kube-controller-manager",
-          "operation": "Update",
-          "time": "2024-07-20T16:02:04.000Z"
-        },
-        {
-          "apiVersion": "v1",
-          "fieldsType": "FieldsV1",
-          "fieldsV1": {
-            "f:status": {
-              "f:conditions": {
-                "k:{\"type\":\"ContainersReady\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"Initialized\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"PodReadyToStartContainers\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                },
-                "k:{\"type\":\"Ready\"}": {
-                  ".": {},
-                  "f:lastProbeTime": {},
-                  "f:lastTransitionTime": {},
-                  "f:status": {},
-                  "f:type": {}
-                }
-              },
-              "f:containerStatuses": {},
-              "f:hostIP": {},
-              "f:hostIPs": {},
-              "f:phase": {},
-              "f:podIP": {},
-              "f:podIPs": {
-                ".": {},
-                "k:{\"ip\":\"10.1.0.197\"}": {
-                  ".": {},
-                  "f:ip": {}
-                }
-              },
-              "f:startTime": {}
-            }
-          },
-          "manager": "kubelet",
-          "operation": "Update",
-          "subresource": "status",
-          "time": "2024-07-22T19:17:49.000Z"
-        }
-      ],
-      "name": "mongodb-d8dbf989b-brnkx",
-      "namespace": "default",
-      "ownerReferences": [
-        {
-          "apiVersion": "apps/v1",
-          "blockOwnerDeletion": true,
-          "controller": true,
-          "kind": "ReplicaSet",
-          "name": "mongodb-d8dbf989b",
-          "uid": "a72be568-7bea-4b10-97ef-8260acc57fa6"
-        }
-      ],
-      "resourceVersion": "620563",
-      "uid": "020732dc-9f12-44cd-9f3c-ce92e1aa89c3"
-    },
-    "spec": {
-      "containers": [
-        {
-          "env": [
-            {
-              "name": "MONGO_INITDB_ROOT_PASSWORD",
-              "value": "pass"
-            },
-            {
-              "name": "MONGO_INITDB_ROOT_USERNAME",
-              "value": "admin"
-            }
-          ],
-          "image": "mongo",
-          "imagePullPolicy": "Always",
-          "name": "mongodb",
-          "ports": [
-            {
-              "containerPort": 27017,
-              "protocol": "TCP"
-            }
-          ],
-          "resources": {},
-          "terminationMessagePath": "/dev/termination-log",
-          "terminationMessagePolicy": "File",
-          "volumeMounts": [
-            {
-              "mountPath": "/data/db",
-              "name": "mongo-data"
-            },
-            {
-              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
-              "name": "kube-api-access-8hzsp",
-              "readOnly": true
-            }
-          ]
-        }
-      ],
-      "dnsPolicy": "ClusterFirst",
-      "enableServiceLinks": true,
-      "nodeName": "docker-desktop",
-      "preemptionPolicy": "PreemptLowerPriority",
-      "priority": 0,
-      "restartPolicy": "Always",
-      "schedulerName": "default-scheduler",
-      "securityContext": {},
-      "serviceAccount": "default",
-      "serviceAccountName": "default",
-      "terminationGracePeriodSeconds": 30,
-      "tolerations": [
-        {
-          "effect": "NoExecute",
-          "key": "node.kubernetes.io/not-ready",
-          "operator": "Exists",
-          "tolerationSeconds": 300
-        },
-        {
-          "effect": "NoExecute",
-          "key": "node.kubernetes.io/unreachable",
-          "operator": "Exists",
-          "tolerationSeconds": 300
-        }
-      ],
-      "volumes": [
-        {
-          "name": "mongo-data",
-          "persistentVolumeClaim": {
-            "claimName": "mongo-data"
+      {
+        "type": "PodScheduled",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2024-07-20T16:02:05Z"
+      }
+    ],
+    "hostIP": "192.168.65.3",
+    "hostIPs": [
+      {
+        "ip": "192.168.65.3"
+      }
+    ],
+    "podIP": "10.1.0.205",
+    "podIPs": [
+      {
+        "ip": "10.1.0.205"
+      }
+    ],
+    "startTime": "2024-07-20T16:02:05Z",
+    "containerStatuses": [
+      {
+        "name": "ecs-test",
+        "state": {
+          "running": {
+            "startedAt": "2024-07-24T07:45:01Z"
           }
         },
-        {
-          "name": "kube-api-access-8hzsp",
-          "projected": {
-            "defaultMode": 420,
-            "sources": [
-              {
-                "serviceAccountToken": {
-                  "expirationSeconds": 3607,
-                  "path": "token"
-                }
-              },
-              {
-                "configMap": {
-                  "items": [
-                    {
-                      "key": "ca.crt",
-                      "path": "ca.crt"
-                    }
-                  ],
-                  "name": "kube-root-ca.crt"
-                }
-              },
-              {
-                "downwardAPI": {
-                  "items": [
-                    {
-                      "fieldRef": {
-                        "apiVersion": "v1",
-                        "fieldPath": "metadata.namespace"
-                      },
-                      "path": "namespace"
-                    }
-                  ]
-                }
-              }
-            ]
+        "lastState": {},
+        "ready": true,
+        "restartCount": 3,
+        "image": "onlytenpercent/ecs-test:1.0",
+        "imageID": "docker-pullable://onlytenpercent/ecs-test@sha256:afb9719583042454c8cd68b0d2c38231e1c37f74660cc2fe23ee2643eb09d2a5",
+        "containerID": "docker://4b2a9974075f03d48659bdba825e7a8230c651ddbf05621b3ae341d857c7dfa2",
+        "started": true
+      },
+      {
+        "name": "mongodb-evil",
+        "state": {
+          "running": {
+            "startedAt": "2024-07-24T08:22:11Z"
           }
-        }
-      ]
-    },
-    "status": {
-      "conditions": [
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:49.000Z",
-          "status": "True",
-          "type": "PodReadyToStartContainers"
         },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-20T16:02:04.000Z",
-          "status": "True",
-          "type": "Initialized"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:49.000Z",
-          "status": "True",
-          "type": "Ready"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-22T19:17:49.000Z",
-          "status": "True",
-          "type": "ContainersReady"
-        },
-        {
-          "lastProbeTime": null,
-          "lastTransitionTime": "2024-07-20T16:02:04.000Z",
-          "status": "True",
-          "type": "PodScheduled"
-        }
-      ],
-      "containerStatuses": [
-        {
-          "containerID": "docker://0a4c0d514dda5b06a260bcc5524e3fb2de9d8a70aeb30e0f9b1a2b595b7098f9",
-          "image": "mongo:latest",
-          "imageID": "docker-pullable://mongo@sha256:1cd3951000020c1cb1757868e6cfd82667f57d80bb31fed8b585e26a8a1d960f",
-          "lastState": {
-            "terminated": {
-              "containerID": "docker://04857622a5a6e4c9335a80c15be36f91e5d87b2d1e044382f3ccb6e763103b78",
-              "exitCode": 255,
-              "finishedAt": "2024-07-22T19:17:39.000Z",
-              "reason": "Error",
-              "startedAt": "2024-07-22T15:31:23.000Z"
-            }
-          },
-          "name": "mongodb",
-          "ready": true,
-          "restartCount": 2,
-          "started": true,
-          "state": {
-            "running": {
-              "startedAt": "2024-07-22T19:17:48.000Z"
-            }
+        "lastState": {
+          "terminated": {
+            "exitCode": 0,
+            "reason": "Completed",
+            "startedAt": "2024-07-24T08:17:24Z",
+            "finishedAt": "2024-07-24T08:21:56Z",
+            "containerID": "docker://fa1017df84fb7a5ce046c0658c046590a3e2600a0dbbc3107e608fd820a81a20"
           }
-        }
-      ],
-      "hostIP": "192.168.65.3",
-      "hostIPs": [
-        {
-          "ip": "192.168.65.3"
-        }
-      ],
-      "phase": "Running",
-      "podIP": "10.1.0.197",
-      "podIPs": [
-        {
-          "ip": "10.1.0.197"
-        }
-      ],
-      "qosClass": "BestEffort",
-      "startTime": "2024-07-20T16:02:04.000Z"
-    }
+        },
+        "ready": true,
+        "restartCount": 6,
+        "image": "mongo:latest",
+        "imageID": "docker-pullable://mongo@sha256:1cd3951000020c1cb1757868e6cfd82667f57d80bb31fed8b585e26a8a1d960f",
+        "containerID": "docker://d85634a3d55697fe673e2e4c21a6bbb8fcd655546969c1857848152b7a79ba6b",
+        "started": true
+      }
+    ],
+    "qosClass": "BestEffort"
   }
-]
+}

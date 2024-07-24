@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server/server.js",
-    "test": "NODE_ENV=test jest --verbose"
+    "start": "nodemon --exec node --trace-warnings server/server.js",
+    "test": "NODE_ENV=test jest --verbose",
+    "s": "node --trace-warnings server/server.js"
   },
   "author": "",
   "license": "ISC",

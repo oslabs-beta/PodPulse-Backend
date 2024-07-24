@@ -21,10 +21,9 @@ dbController.getNamespaceList = async (req, res, next) => {
 };
 
 dbController.getNamespaceState = async (req, res, next) => {
-  let { namespace } = req.params;
-  const userName = req.cookies.secretCookie.data.userName;
-  // username = 'test';
-  // namespace = 'default';
+  let { username, namespace } = req.params;
+  username = 'test';
+  namespace = 'default';
 
   function retrieveNamespace(username, namespace) {
     const namespaceQuery = `Select json_object ( 'NAMESPACE_NAME' value ns.namespace_name, 'NAMESPACE_DB_ID' value ns.db_id, 'PODS' value json_arrayagg(pods_join.pods) ) from namespace ns join
@@ -39,7 +38,7 @@ where ns.namespace_name = '${namespace}' and ns.user_db_id = (Select u.db_id fro
     return db.query(namespaceQuery);
   }
 
-  retrieveNamespace(userName, namespace)
+  retrieveNamespace(username, namespace)
     .then((results) => {
       console.log(results);
       const resultObj = JSON.parse(Object.values(results[0])[0]);
@@ -82,7 +81,7 @@ dbController.checkNamespaceNotInDB = async (req, res, next) => {
   const { namespace } = req.params;
   const namespaceInDBQuery = `SELECT db_id FROM NAMESPACE where user_db_id = (SELECT db_id from USER_TABLE where username = :username) and namespace_name = :namespace`;
   const binds = {
-    username: req.cookies.secretCookie.data.userName,
+    username: 'jeremiah', //req.cookies.secretCookie.data.userName,
     namespace: namespace,
   };
 
@@ -100,11 +99,13 @@ dbController.checkNamespaceNotInDB = async (req, res, next) => {
 };
 
 dbController.initializeNamespace = async (req, res, next) => {
-  const { namespace } = req.params;
-  const { userName } = req.cookies.secretCookie.data;
+  // const { namespace } = req.params;
+  // const { userName } = req.cookies.secretCookie.data;
   console.log('LOAD POD DATA');
+  username = 'test';
+  namespace = 'default';
 
-  console.log(userName + ' ' + namespace);
+  console.log(username + ' ' + namespace);
 
   const query = `
     BEGIN
@@ -114,13 +115,14 @@ dbController.initializeNamespace = async (req, res, next) => {
 
   const binds = {
     name: namespace, //would take from user input field, defaults to 'default'
-    user: userName, //comes from cookie
+    user: username, //comes from cookie
   };
 
-  db.query(query, binds, true)
-    .then((result) => {
-      console.log('NAMESPACE RESULT: ', result);
-      k8sApi.listNamespacedPod(namespace).then((result) => {
+  db.query(query, binds, true).then((result) => {
+    console.log('NAMESPACE RESULT: ', result);
+    k8sApi
+      .listNamespacedPod(namespace)
+      .then((result) => {
         const pods = result.body.items;
 
         pods.forEach((pod) => {
@@ -130,13 +132,11 @@ dbController.initializeNamespace = async (req, res, next) => {
             pod_name += pod_name_split[i];
 
           pod.status.containerStatuses.forEach((container) => {
-            // console.log('CONTAINER: ', container);
-
             const podQuery = `
-              BEGIN
-                INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name);
-              END;
-              `;
+    BEGIN
+      INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name);
+    END;
+    `;
             const podBinds = {
               namespace_name: namespace,
               username: username,
@@ -158,14 +158,15 @@ dbController.initializeNamespace = async (req, res, next) => {
             }); //probably add to res.locals here
           });
         });
+      })
+      .then(() => {
+        return next();
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .then(() => {
-      return next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  });
+  // console.log('CONTAINER: ', container);
 };
 
 module.exports = dbController;
