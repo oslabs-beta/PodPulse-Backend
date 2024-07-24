@@ -9,10 +9,10 @@ require('dotenv').config();
 const PORT = 3000;
 const app = express();
 
-const authcontroller = require('../controllers/authcontroller');
-const k8scontroller = require('../controllers/k8scontroller'); //temporarily out of commission
-const dbController = require('../controllers/dbController');
-const usercontroller = require('../controllers/usercontroller');
+const authcontroller = require('./controllers/authcontroller');
+const k8scontroller = require('./controllers/k8scontroller'); //temporarily out of commission
+const dbController = require('./controllers/dbController');
+const usercontroller = require('./controllers/usercontroller');
 const { addOrUpdateObject } = require('@kubernetes/client-node');
 
 app.use(express.json());
@@ -25,7 +25,6 @@ app.get('/getNamespaceList', authcontroller.verify, dbController.getNamespaceLis
 });
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
-
   return res.status(200).json(res.locals.result);
 });
 
@@ -41,10 +40,11 @@ app.get(
 );
 
 app.get(
-  '/initializeNamespace/:username/:namespace',
-   dbController.initializeNamespace,
+  '/testing/:namespace',
+  dbController.checkNamespaceExists,
+  dbController.checkNamespaceNotInDB,
   (req, res) => {
-    return res.status(200).json(res.locals.result);
+    return res.sendStatus(200);
   }
 );
 
@@ -61,11 +61,16 @@ app.get(
   }
 );
 
-app.post('/createUser', usercontroller.hashing, usercontroller.createUser, (req,res) => {
-  return res.redirect('/');
-})
+app.post(
+  '/createUser',
+  usercontroller.hashing,
+  usercontroller.createUser,
+  (req, res) => {
+    return res.status(200).json(res.locals.createdUser);
+  }
+);
 
-app.post('/', usercontroller.login, (req, res) => {
+app.post('/login', usercontroller.login, (req, res) => {
   return res
     .status(200)
     .cookie('secretCookie', res.locals.jwt, {
