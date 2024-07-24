@@ -9,10 +9,10 @@ require('dotenv').config();
 const PORT = 3000;
 const app = express();
 
-const authcontroller = require('./controllers/authcontroller');
-const k8scontroller = require('./controllers/k8scontroller'); //temporarily out of commission
-const dbController = require('./controllers/dbController');
-const usercontroller = require('./controllers/usercontroller');
+const authcontroller = require('../controllers/authcontroller');
+const k8scontroller = require('../controllers/k8scontroller'); //temporarily out of commission
+const dbController = require('../controllers/dbController');
+const usercontroller = require('../controllers/usercontroller');
 const { addOrUpdateObject } = require('@kubernetes/client-node');
 
 app.use(express.json());
@@ -20,9 +20,14 @@ app.use(express.urlencoded());
 app.use(cors());
 app.use(cookieParser());
 
-app.get('/getNamespaceList', dbController.getNamespaceList, (req, res) => {
-  return res.status(200).json(res.locals.namespaceList);
-});
+app.get(
+  '/getNamespaceList',
+  authcontroller.verify,
+  dbController.getNamespaceList,
+  (req, res) => {
+    return res.status(200).json(res.locals.namespaceList);
+  }
+);
 
 app.get('/getPods', k8scontroller.getPods, (req, res) => {
   return res.status(200).json(res.locals.result);
@@ -30,6 +35,7 @@ app.get('/getPods', k8scontroller.getPods, (req, res) => {
 
 app.get(
   '/initializeNamespace/:namespace',
+  authcontroller.verify,
   dbController.checkNamespaceExists,
   dbController.checkNamespaceNotInDB,
   dbController.initializeNamespace,
@@ -52,8 +58,14 @@ app.get('/auth', authcontroller.verify, (req, res) => {
   return res.status(200).json(res.locals.verification);
 });
 
+app.get('/logout', (req, res) => {
+  console.log('logging out', req.cookies)
+  return res.status(200).clearCookie('secretCookie').send('cookies cleared')
+})
+
 app.get(
   '/getNamespaceState/:namespace/',
+  authcontroller.verify,
   dbController.getNamespaceState,
   (req, res) => {
     return res.status(200).json(res.locals.namespaceData);
