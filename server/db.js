@@ -12,6 +12,8 @@ function query(sqlQuery, binds = {}, isProcedure = false) {
     connectString: process.env.SVC_NAME,
   };
 
+  console.log('BINDS: ', JSON.stringify(binds, null, 2));
+
   return new Promise((res, rej) => {
     oracledb
       .getConnection(dbConfig)
@@ -23,7 +25,7 @@ function query(sqlQuery, binds = {}, isProcedure = false) {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
           })
           .then((result) => {
-            console.log('Success, closing connection')
+            console.log('Success, closing connection');
             // console.log('RESULT IN TEST_QUERY', result);
             con.close();
             res(isProcedure ? result.outBinds : result.rows);
@@ -91,8 +93,8 @@ const oldQuery = async function (sqlQuery, type = 'SELECT') {
   } finally {
     if (connection) {
       try {
-        console.log('connection closing')
-        await connection.close()
+        console.log('connection closing');
+        await connection.close();
       } catch (err) {
         console.error(err);
       }

@@ -1,0 +1,344 @@
+[
+  {
+    "metadata": {
+      "annotations": {
+        "kubeadm.alpha.kubernetes.io/cri-socket": "unix:///var/run/cri-dockerd.sock",
+        "node.alpha.kubernetes.io/ttl": "0",
+        "volumes.kubernetes.io/controller-managed-attach-detach": "true"
+      },
+      "creationTimestamp": "2024-07-01T19:44:19.000Z",
+      "labels": {
+        "beta.kubernetes.io/arch": "amd64",
+        "beta.kubernetes.io/os": "linux",
+        "kubernetes.io/arch": "amd64",
+        "kubernetes.io/hostname": "docker-desktop",
+        "kubernetes.io/os": "linux",
+        "node-role.kubernetes.io/control-plane": "",
+        "node.kubernetes.io/exclude-from-external-load-balancers": ""
+      },
+      "managedFields": [
+        {
+          "apiVersion": "v1",
+          "fieldsType": "FieldsV1",
+          "fieldsV1": {
+            "f:metadata": {
+              "f:annotations": {
+                ".": {},
+                "f:volumes.kubernetes.io/controller-managed-attach-detach": {}
+              },
+              "f:labels": {
+                ".": {},
+                "f:beta.kubernetes.io/arch": {},
+                "f:beta.kubernetes.io/os": {},
+                "f:kubernetes.io/arch": {},
+                "f:kubernetes.io/hostname": {},
+                "f:kubernetes.io/os": {}
+              }
+            }
+          },
+          "manager": "kubelet",
+          "operation": "Update",
+          "time": "2024-07-01T19:44:19.000Z"
+        },
+        {
+          "apiVersion": "v1",
+          "fieldsType": "FieldsV1",
+          "fieldsV1": {
+            "f:metadata": {
+              "f:annotations": {
+                "f:kubeadm.alpha.kubernetes.io/cri-socket": {}
+              },
+              "f:labels": {
+                "f:node-role.kubernetes.io/control-plane": {},
+                "f:node.kubernetes.io/exclude-from-external-load-balancers": {}
+              }
+            }
+          },
+          "manager": "kubeadm",
+          "operation": "Update",
+          "time": "2024-07-01T19:44:22.000Z"
+        },
+        {
+          "apiVersion": "v1",
+          "fieldsType": "FieldsV1",
+          "fieldsV1": {
+            "f:metadata": {
+              "f:annotations": {
+                "f:node.alpha.kubernetes.io/ttl": {}
+              }
+            }
+          },
+          "manager": "kube-controller-manager",
+          "operation": "Update",
+          "time": "2024-07-01T19:44:26.000Z"
+        },
+        {
+          "apiVersion": "v1",
+          "fieldsType": "FieldsV1",
+          "fieldsV1": {
+            "f:status": {
+              "f:allocatable": {
+                "f:memory": {}
+              },
+              "f:capacity": {
+                "f:memory": {}
+              },
+              "f:conditions": {
+                "k:{\"type\":\"DiskPressure\"}": {
+                  "f:lastHeartbeatTime": {}
+                },
+                "k:{\"type\":\"MemoryPressure\"}": {
+                  "f:lastHeartbeatTime": {}
+                },
+                "k:{\"type\":\"PIDPressure\"}": {
+                  "f:lastHeartbeatTime": {}
+                },
+                "k:{\"type\":\"Ready\"}": {
+                  "f:lastHeartbeatTime": {},
+                  "f:lastTransitionTime": {},
+                  "f:message": {},
+                  "f:reason": {},
+                  "f:status": {}
+                }
+              },
+              "f:images": {},
+              "f:nodeInfo": {
+                "f:bootID": {},
+                "f:containerRuntimeVersion": {}
+              }
+            }
+          },
+          "manager": "kubelet",
+          "operation": "Update",
+          "subresource": "status",
+          "time": "2024-07-23T07:08:54.000Z"
+        }
+      ],
+      "name": "docker-desktop",
+      "resourceVersion": "677360",
+      "uid": "67ecfa50-3042-4251-badb-c6df1e2b8871"
+    },
+    "spec": {},
+    "status": {
+      "addresses": [
+        {
+          "address": "192.168.65.3",
+          "type": "InternalIP"
+        },
+        {
+          "address": "docker-desktop",
+          "type": "Hostname"
+        }
+      ],
+      "allocatable": {
+        "cpu": "32",
+        "ephemeral-storage": "972991057538",
+        "hugepages-1Gi": "0",
+        "hugepages-2Mi": "0",
+        "memory": "32358220Ki",
+        "pods": "110"
+      },
+      "capacity": {
+        "cpu": "32",
+        "ephemeral-storage": "1055762868Ki",
+        "hugepages-1Gi": "0",
+        "hugepages-2Mi": "0",
+        "memory": "32460620Ki",
+        "pods": "110"
+      },
+      "conditions": [
+        {
+          "lastHeartbeatTime": "2024-07-23T07:08:54.000Z",
+          "lastTransitionTime": "2024-07-01T19:44:19.000Z",
+          "message": "kubelet has sufficient memory available",
+          "reason": "KubeletHasSufficientMemory",
+          "status": "False",
+          "type": "MemoryPressure"
+        },
+        {
+          "lastHeartbeatTime": "2024-07-23T07:08:54.000Z",
+          "lastTransitionTime": "2024-07-01T19:44:19.000Z",
+          "message": "kubelet has no disk pressure",
+          "reason": "KubeletHasNoDiskPressure",
+          "status": "False",
+          "type": "DiskPressure"
+        },
+        {
+          "lastHeartbeatTime": "2024-07-23T07:08:54.000Z",
+          "lastTransitionTime": "2024-07-01T19:44:19.000Z",
+          "message": "kubelet has sufficient PID available",
+          "reason": "KubeletHasSufficientPID",
+          "status": "False",
+          "type": "PIDPressure"
+        },
+        {
+          "lastHeartbeatTime": "2024-07-23T07:08:54.000Z",
+          "lastTransitionTime": "2024-07-01T19:44:20.000Z",
+          "message": "kubelet is posting ready status",
+          "reason": "KubeletReady",
+          "status": "True",
+          "type": "Ready"
+        }
+      ],
+      "daemonEndpoints": {
+        "kubeletEndpoint": {
+          "Port": 10250
+        }
+      },
+      "images": [
+        {
+          "names": [
+            "sg55/mm-dev-chronos@sha256:329383657da40a6e5e08690c69bb3ac9913eb639c12d1032a4a33e131e8e96c2",
+            "sg55/mm-dev-chronos:1.0"
+          ],
+          "sizeBytes": 1054080620
+        },
+        {
+          "names": ["koobers/mm-dev:latest"],
+          "sizeBytes": 1041156591
+        },
+        {
+          "names": ["koobers/mm-prod:latest"],
+          "sizeBytes": 1034905689
+        },
+        {
+          "names": [
+            "mongo@sha256:bd38dc3d2895c7434b9b75c86525642efe3d65e4c6aadfe397486d7cc89406f0"
+          ],
+          "sizeBytes": 796928306
+        },
+        {
+          "names": [
+            "mongo@sha256:1cd3951000020c1cb1757868e6cfd82667f57d80bb31fed8b585e26a8a1d960f",
+            "mongo@sha256:54996a559c724c726a31fb8131e1c9088a05f7e531760e2897212389bbf20fed",
+            "mongo@sha256:d6bd5e1840b6cddcaecc7fd05a12cb6393c2ff18179bb003d151af8fdc9db2a8",
+            "mongo:latest"
+          ],
+          "sizeBytes": 795856228
+        },
+        {
+          "names": [
+            "mongo@sha256:0cf7c3db50892da41c886e541693d6181ef77047414a8f7e15ae63e842ce65f5"
+          ],
+          "sizeBytes": 795856101
+        },
+        {
+          "names": [
+            "docker/desktop-kubernetes@sha256:ee4d0cb41223b7c5e27369aacedcbc17000df6990f03f5bb725f9e1b42678d34",
+            "docker/desktop-kubernetes:kubernetes-v1.29.2-cni-v1.4.0-critools-v1.29.0-cri-dockerd-v0.3.11-1-debian"
+          ],
+          "sizeBytes": 438872800
+        },
+        {
+          "names": [
+            "postgres@sha256:0aafd2ae7e6c391f39fb6b7621632d79f54068faebc726caf469e87bd1d301c0",
+            "postgres:latest"
+          ],
+          "sizeBytes": 431577852
+        },
+        {
+          "names": ["koobers/mm-postgres:latest"],
+          "sizeBytes": 370809173
+        },
+        {
+          "names": [
+            "sg55/mm-postgres-chronos@sha256:599d6102857f9449b7fb56744622572e8145108b5d4252ae94f563c7a61323ce",
+            "sg55/mm-postgres-chronos:1.0"
+          ],
+          "sizeBytes": 350514681
+        },
+        {
+          "names": null,
+          "sizeBytes": 226267754
+        },
+        {
+          "names": [
+            "onlytenpercent/mongo-express@sha256:749f951cf74be04f8f8d87507391a73e8b6f733684fe2ee9652846433726770a",
+            "onlytenpercent/mongo-express:1.0"
+          ],
+          "sizeBytes": 226267534
+        },
+        {
+          "names": [
+            "onlytenpercent/ecs-test@sha256:d3e851250f33546d63a91c80336d12f2bf4794da75b83f8c5577616faa87c174"
+          ],
+          "sizeBytes": 187303672
+        },
+        {
+          "names": [
+            "onlytenpercent/ecs-test@sha256:afb9719583042454c8cd68b0d2c38231e1c37f74660cc2fe23ee2643eb09d2a5",
+            "onlytenpercent/ecs-test:1.0"
+          ],
+          "sizeBytes": 187303443
+        },
+        {
+          "names": [
+            "onlytenpercent/ecs-test@sha256:0473ce9e8c179c60f8961099fe74aa106aecbe1286e19b99286088dc2d4d56d5"
+          ],
+          "sizeBytes": 187303383
+        },
+        {
+          "names": ["registry.k8s.io/etcd:3.5.10-0"],
+          "sizeBytes": 147502300
+        },
+        {
+          "names": ["registry.k8s.io/kube-apiserver:v1.29.2"],
+          "sizeBytes": 127316790
+        },
+        {
+          "names": ["registry.k8s.io/kube-controller-manager:v1.29.2"],
+          "sizeBytes": 121947313
+        },
+        {
+          "names": ["registry.k8s.io/kube-proxy:v1.29.2"],
+          "sizeBytes": 82283543
+        },
+        {
+          "names": ["registry.k8s.io/coredns/coredns:v1.11.1"],
+          "sizeBytes": 59820619
+        },
+        {
+          "names": ["registry.k8s.io/kube-scheduler:v1.29.2"],
+          "sizeBytes": 59540634
+        },
+        {
+          "names": [
+            "docker/desktop-storage-provisioner@sha256:115d77efe6e256cefbcdf1d3292bede9339ef3952a2a83393cea217a3ffdef36",
+            "docker/desktop-storage-provisioner:v2.0"
+          ],
+          "sizeBytes": 41850220
+        },
+        {
+          "names": [
+            "docker/desktop-vpnkit-controller@sha256:7ecf567ea07095f9af6ce2004055d4d37e4ee3bc19b553cce2f6c37ee9b916bf",
+            "docker/desktop-vpnkit-controller:dc331cb22850be0cdd97c84a9cfecaf44a1afb6e"
+          ],
+          "sizeBytes": 36226360
+        },
+        {
+          "names": [
+            "felipecruz/alpine-tar-zstd@sha256:2db46ce1251d53d182c5da1ff22d300961f4092ad9491e0e872091679cba87b9",
+            "felipecruz/alpine-tar-zstd:latest"
+          ],
+          "sizeBytes": 6987555
+        },
+        {
+          "names": ["registry.k8s.io/pause:3.9"],
+          "sizeBytes": 743952
+        }
+      ],
+      "nodeInfo": {
+        "architecture": "amd64",
+        "bootID": "0200ec62-cfa3-4f08-9ef7-2743eadcb7ca",
+        "containerRuntimeVersion": "docker://27.0.3",
+        "kernelVersion": "5.15.153.1-microsoft-standard-WSL2",
+        "kubeProxyVersion": "v1.29.2",
+        "kubeletVersion": "v1.29.2",
+        "machineID": "689f64cb-4cb6-4e38-80fb-032c1180d968",
+        "operatingSystem": "linux",
+        "osImage": "Docker Desktop",
+        "systemUUID": "689f64cb-4cb6-4e38-80fb-032c1180d968"
+      }
+    }
+  }
+]

@@ -124,39 +124,39 @@ dbController.initializeNamespace = async (req, res, next) => {
         const pods = result.body.items;
 
         pods.forEach((pod) => {
-          const container = pod.status.containerStatuses[0];
-          // console.log('CONTAINER: ', container);
-
           const pod_name_split = pod.metadata.name.split('-');
           let pod_name = '';
           for (let i = 0; i < pod_name_split.length - 2; i++)
             pod_name += pod_name_split[i];
 
-          const podQuery = `
-            BEGIN
-              INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name);
-            END;
-            `;
-          const podBinds = {
-            namespace_name: namespace,
-            username: userName,
-            container_name: container.name,
-            container_restart_count: container.restartCount,
-            container_restart_count: container.restartCount,
-            log_time: Date.parse(
-              container.state.waiting
-                ? 0
-                : container.state.running
-                ? container.state.running.startedAt //should probably use terminatedAt
-                : container.state.terminated.finishedAt
-            ),
-            pod_id_name: pod.metadata.name,
-            pod_name: pod_name,
-          };
+          pod.status.containerStatuses.forEach((container) => {
+            // console.log('CONTAINER: ', container);
 
-          db.query(podQuery, podBinds, true).then((result) => {
-            console.log('INIT RESULT: ', result);
-          }); //probably add to res.locals here
+            const podQuery = `
+              BEGIN
+                INIT_CONTAINER(:namespace_name, :username, :container_name, :container_restart_count, :log_time, :pod_id_name, :pod_name);
+              END;
+              `;
+            const podBinds = {
+              namespace_name: namespace,
+              username: username,
+              container_name: container.name,
+              container_restart_count: container.restartCount,
+              log_time: Date.parse(
+                container.state.waiting
+                  ? 0
+                  : container.state.running
+                  ? container.state.running.startedAt //should probably use terminatedAt
+                  : container.state.terminated.finishedAt
+              ),
+              pod_id_name: pod.metadata.name,
+              pod_name: pod_name,
+            };
+
+            db.query(podQuery, podBinds, true).then((result) => {
+              console.log('INIT RESULT: ', result);
+            }); //probably add to res.locals here
+          });
         });
       });
     })
