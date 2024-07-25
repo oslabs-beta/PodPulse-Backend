@@ -51,7 +51,13 @@ updateFuncController.createUpdateFunc = (req, res, next) => {
       binds = { ns_id: podCache[namespace] };
 
       res = await db.query(query, binds, false);
-
+      console.log('res was', res)
+      // if (res.length === 0){
+      //   return next(() ={
+      //     err: err,
+      //     message: {error: 'namespace must have at least one pod'}
+      //   });
+      // }
       podCache.pods = {};
       let podIdList = '(';
 
