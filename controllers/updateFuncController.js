@@ -156,8 +156,8 @@ updateFuncController.createUpdateFunc = (req, res, next) => {
     };
   }
   try {
-    createUpdateFunction(userName, namespace).then((updateFunciton) => {
-      updateFunciton();
+    createUpdateFunction(userName, namespace).then((updateFunction) => {
+      updateFunction();
       return next();
     });
   } catch (err) {
