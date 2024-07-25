@@ -15,6 +15,7 @@ const dbController = require('../controllers/dbController');
 const usercontroller = require('../controllers/usercontroller');
 const { addOrUpdateObject } = require('@kubernetes/client-node');
 const updateFuncController = require('../controllers/updateFuncController');
+const ws = require('./web');
 
 app.use(express.json());
 app.use(express.urlencoded());
