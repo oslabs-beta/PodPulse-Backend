@@ -10,7 +10,7 @@ The goal of `PodPulse` was to take away as many tedious command-line interface i
 This app will only function with namespaces that exist
 # Documentation
 # Contribution Guidelines
-# Future Features
+# Feature Guide
 | Feature                                                                               | Status    |
 |---------------------------------------------------------------------------------------|-----------|
 | Create Cloud-hosted Kubernetes Implementation                                         | 🙏🏻        |
