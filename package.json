@@ -17,6 +17,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "just-a-throbber": "^1.0.8",
     "oracledb": "^6.5.1",
     "ws": "^8.18.0"
   },

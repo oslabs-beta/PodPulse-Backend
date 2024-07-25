@@ -15,7 +15,6 @@ const dbController = require('../controllers/dbController');
 const usercontroller = require('../controllers/usercontroller');
 const { addOrUpdateObject } = require('@kubernetes/client-node');
 const updateFuncController = require('../controllers/updateFuncController');
-const ws = require('./web');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -104,7 +103,7 @@ app.post('/login', usercontroller.login, (req, res) => {
 
 app.get('/*', function (req, res) {
   res.sendFile(
-    path.join(__dirname, '../PodPulse-1/public/index.html'),
+    path.join(__dirname, '../../PodPulse/dist/index.html'),
     function (err) {
       if (err) {
         res.status(500).send(err);
