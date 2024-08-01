@@ -50,10 +50,16 @@ updateFuncController.createUpdateFunc = (req, res, next) => {
 
             binds = { ns_id: podCache[namespace] };
 
-            res = await db.query(query, binds, false);
-
-            podCache.pods = {};
-            let podIdList = '(';
+      res = await db.query(query, binds, false);
+      console.log('res was', res)
+      // if (res.length === 0){
+      //   return next(() ={
+      //     err: err,
+      //     message: {error: 'namespace must have at least one pod'}
+      //   });
+      // }
+      podCache.pods = {};
+      let podIdList = '(';
 
             res.forEach((row) => {
                 podCache.pods[row.POD_ID] = { id: row.DB_ID };
@@ -152,17 +158,17 @@ updateFuncController.createUpdateFunc = (req, res, next) => {
                 }
             });
 
-            stop ? cache.stop() : cache.start();
-        };
-    }
-    try {
-        createUpdateFunction(userName, namespace).then((updateFunciton) => {
-            updateFunciton();
-            return next();
-        });
-    } catch (err) {
-        console.log(err);
-    }
+      stop ? cache.stop() : cache.start();
+    };
+  }
+  try {
+    createUpdateFunction(userName, namespace).then((updateFunction) => {
+      updateFunction();
+      return next();
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 module.exports = updateFuncController;

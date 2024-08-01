@@ -18,9 +18,15 @@
     "eslint": "^9.7.0",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+<<<<<<< HEAD
     "oracledb": "^6.5.1",
     "prettier": "^3.3.3",
     "prettier-eslint": "^16.3.0"
+=======
+    "just-a-throbber": "^1.0.8",
+    "oracledb": "^6.5.1",
+    "ws": "^8.18.0"
+>>>>>>> origin/redux-change
   },
   "devDependencies": {
     "nodemon": "^3.1.4"

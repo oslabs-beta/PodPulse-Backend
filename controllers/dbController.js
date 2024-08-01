@@ -1,6 +1,9 @@
 const db = require('../server/db');
 const oracledb = require('oracledb');
 const k8sApi = require('../server/k8sApi');
+const {
+  V1StatefulSetPersistentVolumeClaimRetentionPolicy,
+} = require('@kubernetes/client-node');
 
 const dbController = {};
 
@@ -166,6 +169,56 @@ dbController.initializeNamespace = async (req, res, next) => {
       });
   });
   // console.log('CONTAINER: ', container);
+};
+
+dbController.getPod = (req, res, next) => {
+  const { id } = req.params;
+
+  let query = `
+  Select * from pod where db_id = :id
+  `;
+
+  let binds = {
+    id: id,
+  };
+
+  db.query(query, binds, false)
+    .then((pod) => {
+      query = `
+      Select * from container where pod_db_id = :id
+      `;
+
+      db.query(query, binds, false).then((container) => {
+        pod[0].CONTAINERS = container;
+        pod[0].CONTAINERS[0].RESTART_LOGS = [];
+        const promiseArray = [];
+
+        pod[0].CONTAINERS.forEach((con) => {
+          query = `
+          Select * from restart_log where CONTAINER_DB_ID = :id
+          `;
+          binds = {
+            id: con.DB_ID,
+          };
+
+          promiseArray.push(db.query(query, binds, false));
+        });
+
+        Promise.all(promiseArray).then((logs) => {
+          console.log(logs);
+          logs.forEach((log) => {
+            pod[0].CONTAINERS[0].RESTART_LOGS = log;
+          });
+
+          console.log(JSON.stringify(pod, null, 2));
+          res.locals.result = pod;
+          return next();
+        });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 module.exports = dbController;
