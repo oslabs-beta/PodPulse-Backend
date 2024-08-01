@@ -102,8 +102,9 @@ app.post('/login', usercontroller.login, (req, res) => {
 });
 
 app.get('/*', function (req, res) {
+  console.log('SERVING HTML');
   res.sendFile(
-    path.join(__dirname, '../PodPulse-1/public/index.html'),
+    path.join(__dirname, '../../PodPulse/dist/index.html'),
     function (err) {
       if (err) {
         res.status(500).send(err);
@@ -119,7 +120,7 @@ app.use((err, req, res, next) => {
     message: { err: 'An error occurred' },
   };
   const errorObj = Object.assign({}, defaultErr, err);
-  console.log(errorObj.log);
+    console.log(errorObj.log);
   return res.status(errorObj.status).json(errorObj.message);
 });
 
