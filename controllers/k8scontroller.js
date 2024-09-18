@@ -1,16 +1,12 @@
-const k8s = require('@kubernetes/client-node');
-const kc = new k8s.KubeConfig();
-// let CronJob = require('cron').CronJob;
-let exec = require('child_process').exec;
-
-// kc.makeApiClient();
-kc.loadFromDefault();
-const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+const k8sApi = require('../server/k8sApi');
 console.log(k8sApi.basePath);
 
 const k8scontroller = {};
 
 k8scontroller.getPods = (req, res, next) => {
+  // k8sApi.listNamespace().then((data) => {const nameSpaces = data.body.items
+  //   nameSpaces.forEach((el) => console.log('name:', el.metadata.name))
+  // }) -> List namespaces
   // k8sApi
   //   .readNamespacedPodLog('ecs-test-6845b4b944-hbcjk', 'default')
   //   .then((result) => {
@@ -22,6 +18,7 @@ k8scontroller.getPods = (req, res, next) => {
 
   k8sApi
     .listNamespacedPod(
+      //Getting pods from the namespaces listed below
       'default'
       // undefined,
       // undefined,
@@ -37,25 +34,18 @@ k8scontroller.getPods = (req, res, next) => {
       // undefined
     )
     .then((result) => {
-      // console.log('Name is: ', result.body.items[0].status.containerStatuses[0].name, 'Restart is: ', result.body.items[0].status.containerStatuses[0].restartCount, "Timestamp start, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.startedAt, "Timestamp finish, ", result.body.items[0].status.containerStatuses[0].lastState.terminated.finishedAt );
       res.locals.result = [];
-      for (
-        let i = 0;
-        i < result.body.items.length;
-        i++ /*el of result.body.items*/
-      ) {
+      for (let i = 0; i < result.body.items.length; i++) {
         const timeNow =
           result.body.items[
             i
-          ].status.containerStatuses[0].lastState.terminated.startedAt.toString();
+          ].status.containerStatuses[0].lastState.terminated.startedAt.toString(); //container log_time as a string
         res.locals.result.push({
           container_db_id: i,
-          container_name: result.body.items[i].status.containerStatuses[0].name,
+          container_name: result.body.items[i].status.containerStatuses[0].name, //Pulling container information logs
           Restarts:
             result.body.items[i].status.containerStatuses[0].restartCount,
-          restart_logs: [
-            { restart_log_db_id: i, log_time: timeNow, restart_person: '' },
-          ],
+          restart_logs: { restart_log_db_id: i, log_time: timeNow },
           Timestamp_Finish:
             result.body.items[i].status.containerStatuses[0].lastState
               .terminated.finishedAt,
@@ -67,9 +57,10 @@ k8scontroller.getPods = (req, res, next) => {
               .terminated.exitCode,
         });
       }
-      next();
+      return next();
     })
     .catch((err) => {
+      console.log('error');
       next(err);
     });
 };
