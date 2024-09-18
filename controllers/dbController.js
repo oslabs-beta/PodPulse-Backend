@@ -13,14 +13,21 @@ dbController.getNamespaceList = async (req, res, next) => {
     username: req.cookies.secretCookie.data.userName,
   };
 
-  db.query(namespaceListQuery, binds).then((results) => {
-    const namespaceList = [];
-    for (let db_obj of results) {
-      namespaceList.push(db_obj.NAMESPACE_NAME);
-    }
-    res.locals.namespaceList = namespaceList;
-    return next();
-  });
+  db.query(namespaceListQuery, binds)
+    .then((results) => {
+      const namespaceList = [];
+      for (let db_obj of results) {
+        namespaceList.push(db_obj.NAMESPACE_NAME);
+      }
+      res.locals.namespaceList = namespaceList;
+      return next();
+    })
+    .catch((err) =>
+      next({
+        log: `Error in dbController.getNamespaceList: ${err}`,
+        status: 500,
+      })
+    );
 };
 
 dbController.getNamespaceState = async (req, res, next) => {
@@ -49,7 +56,12 @@ where ns.namespace_name = '${namespace}' and ns.user_db_id = (Select u.db_id fro
       res.locals.namespaceData = resultObj;
       return next();
     })
-    .catch((err) => next(err));
+    .catch((err) =>
+      next({
+        log: `Error in dbController.getNamespaceState: ${err}`,
+        status: 500,
+      })
+    );
 };
 
 //Namespace initialization
@@ -164,9 +176,12 @@ dbController.initializeNamespace = async (req, res, next) => {
           return next();
         });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) =>
+        next({
+          log: `Error in dbController.initializeNamespace: ${err}`,
+          status: 500,
+        })
+      );
   });
   // console.log('CONTAINER: ', container);
 };
@@ -216,9 +231,12 @@ dbController.getPod = (req, res, next) => {
         });
       });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) =>
+      next({
+        log: `Error in dbController.getPod: ${err}`,
+        status: 500,
+      })
+    );
 };
 
 module.exports = dbController;

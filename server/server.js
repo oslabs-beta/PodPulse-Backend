@@ -54,13 +54,9 @@ app.get(
   }
 );
 
-app.get(
-  '/getPod/:id',
-  dbController.getPod,
-  (req, res) => {
-    return res.status(200).json(res.locals.result);
-  }
-);
+app.get('/getPod/:id', dbController.getPod, (req, res) => {
+  return res.status(200).json(res.locals.result);
+});
 
 app.get(
   '/testing/:namespace',
